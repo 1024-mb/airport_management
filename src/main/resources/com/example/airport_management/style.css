@@ -1,0 +1,26 @@
+.button_global {
+    -fx-background-color: #3d405b;
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-font-size: 17px;
+    -fx-padding: 16px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.root {
+    -fx-font-family: Inter;
+}
+
+#arrow {
+    -fx-opacity: 0;
+    -fx-translate-x: -10;
+    -fx-text-fill: white;
+}
+
+.textinput_global {
+    -fx-font-size: 17px;
+    -fx-padding: 16px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
