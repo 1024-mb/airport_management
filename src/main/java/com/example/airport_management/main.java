@@ -6,12 +6,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 
 public class main extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("startPage.fxml"));
         Parent root = fxmlLoader.load();
 
@@ -21,7 +19,7 @@ public class main extends Application {
         stage.show();
     }
 
-    public void flights(Stage stage) throws IOException {
+    public void flights(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("main.fxml"));
         Parent root = fxmlLoader.load();
 

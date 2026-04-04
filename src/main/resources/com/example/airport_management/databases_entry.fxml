@@ -7,24 +7,18 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.web.WebView?>
 
-<AnchorPane id="root" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airport_management.databases_entry_controller">
+<AnchorPane id="root" fx:id="root" prefHeight="800.0" prefWidth="793.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airport_management.databases_entry_controller">
    <children>
-      <Label alignment="CENTER" layoutX="165.0" layoutY="187.0" style="&#10;" text="Drag components from Library here…" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <WebView id="mainWebView" fx:id="mainWebView" layoutX="10.0" layoutY="8.0" prefHeight="777.0" prefWidth="763.0" />
-      <Label alignment="CENTER" layoutX="2.0" layoutY="57.0" prefHeight="43.0" prefWidth="773.0" text="DATABASES" textFill="#3d405b">
+      <Label alignment="CENTER" layoutY="67.0" prefHeight="43.0" prefWidth="773.0" text="DATABASES" textFill="#3d405b">
          <font>
             <Font size="45.0" />
          </font>
       </Label>
-      <GridPane layoutX="65.0" layoutY="160.0" prefHeight="520.0" prefWidth="668.0">
+      <GridPane layoutX="55.0" layoutY="170.0" prefHeight="520.0" prefWidth="668.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -36,32 +30,41 @@
          <children>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <Button layoutX="21.0" layoutY="17.0" mnemonicParsing="false" prefHeight="212.0" prefWidth="288.0" styleClass="button_global" text="PLANE">
+                  <Button layoutX="21.0" layoutY="17.0" mnemonicParsing="false" onAction="#plane_database" prefHeight="212.0" prefWidth="288.0" styleClass="button_global" text="PLANE">
                      <font>
                         <Font size="23.0" />
                      </font>
                   </Button>
-                  <Label styleClass="arrow_in" layoutX="285.0" layoutY="199.0" text=" »" textFill="#fcfcfc" />
+                  <Label layoutX="271.0" layoutY="189.0" prefHeight="23.0" prefWidth="25.0" styleClass="arrow_in" text=" »" textFill="#fcfcfc">
+                     <font>
+                        <Font size="23.0" />
+                     </font></Label>
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                <children>
-                  <Button layoutX="25.0" layoutY="17.0" mnemonicParsing="false" prefHeight="212.0" prefWidth="288.0" styleClass="button_global" text="FLIGHT">
+                  <Button layoutX="25.0" layoutY="17.0" mnemonicParsing="false" onAction="#flight_database" prefHeight="212.0" prefWidth="288.0" styleClass="button_global" text="FLIGHT">
                      <font>
                         <Font size="23.0" />
                      </font>
                   </Button>
-                  <Label styleClass="arrow_in" layoutX="288.0" layoutY="198.0" text=" »" textFill="#fcfcfc" />
+                  <Label layoutX="276.0" layoutY="188.0" prefHeight="21.0" prefWidth="23.0" styleClass="arrow_in" text=" »" textFill="#fcfcfc">
+                     <font>
+                        <Font size="23.0" />
+                     </font></Label>
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                <children>
-                  <Button layoutX="21.0" layoutY="23.0" mnemonicParsing="false" prefHeight="212.0" prefWidth="288.0" styleClass="button_global" text="AIRLINE">
+                  <Button layoutX="21.0" layoutY="23.0" mnemonicParsing="false" onAction="#airline_database" prefHeight="212.0" prefWidth="288.0" styleClass="button_global" text="AIRLINE">
                      <font>
                         <Font size="23.0" />
                      </font>
                   </Button>
-                  <Label styleClass="arrow_in" layoutX="283.0" layoutY="205.0" text=" »" textFill="#fcfcfc" />
+                  <Label layoutX="273.0" layoutY="195.0" prefHeight="21.0" prefWidth="23.0" styleClass="arrow_in" text=" »" textFill="#fcfcfc">
+                     <font>
+                        <Font size="23.0" />
+                     </font></Label>
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -71,21 +74,30 @@
                         <Font size="23.0" />
                      </font>
                   </Button>
-                  <Label styleClass="arrow_in" layoutX="287.0" layoutY="205.0" text=" »" textFill="#fcfcfc" />
+                  <Label layoutX="276.0" layoutY="195.0" prefHeight="21.0" prefWidth="23.0" styleClass="arrow_in" text=" »" textFill="#fcfcfc">
+                     <font>
+                        <Font size="23.0" />
+                     </font></Label>
                </children>
             </AnchorPane>
          </children>
       </GridPane>
-      <AnchorPane layoutY="1.0" prefHeight="57.0" prefWidth="772.0">
+      <AnchorPane layoutX="1.0" prefHeight="57.0" prefWidth="791.0">
          <children>
-            <ImageView fitHeight="83.0" fitWidth="103.0" layoutX="13.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="83.0" fitWidth="103.0" layoutX="13.0" layoutY="12.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../static/Malaysia_Airports_Logo.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="19.0" fitWidth="45.0" layoutX="719.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+            <Button fx:id="home_button" layoutX="737.0" layoutY="2.0" onAction="#home" prefHeight="52.0" prefWidth="52.0" style="-fx-padding: 0;" styleClass="button_global" />
+            <HBox alignment="CENTER" layoutX="613.0" layoutY="12.0" prefHeight="39.0" prefWidth="34.0">
+               <children>
+                  <Label fx:id="flight_arrow1" textFill="#fcfcfc" />
+               </children>
+            </HBox>
+            <ImageView fitHeight="33.0" fitWidth="27.0" layoutX="750.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" style="-fx-padding: 0px;" styleClass="button_global">
                <image>
-                  <Image url="@../../../static/user.png" />
+                  <Image url="@static/home.png" />
                </image>
             </ImageView>
          </children>

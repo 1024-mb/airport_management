@@ -6,12 +6,13 @@ public class DatabaseConnection {
     public static Connection databaseLink;
 
     public static Connection connect() throws Exception {
-        String url = "jdbc:mysql://localhost:5432/airport_management"; // airport --> databasename
-        String user = "postgres";
-        String password = "yourpassword";
+        String url = "jdbc:mysql://localhost:3306/airport_management"; // airport ==> databasename
+        String user = "root";
+        String password = System.getenv("mysqlpass");
+
 
         try {
-            Class.forName("com.mysql.cj.jbdc.driver");
+
             databaseLink = DriverManager.getConnection(url, user, password);
 
         } catch(Exception e) {

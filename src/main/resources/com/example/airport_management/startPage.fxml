@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane fx:id="root" prefHeight="800.0" prefWidth="793.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airport_management.starterController">
+   <BorderPane prefHeight="800.0" prefWidth="760.0" styleClass="overlay">
+      <top>
+         <VBox alignment="CENTER" prefHeight="0.0" prefWidth="754.0" spacing="10.0" BorderPane.alignment="CENTER">
+            <BorderPane.margin>
+               <Insets top="40.0" />
+            </BorderPane.margin>
+         </VBox>
+      </top>
+
+      <bottom>
+         <VBox prefHeight="117.0" prefWidth="704.0" spacing="15.0" BorderPane.alignment="CENTER">
+            <BorderPane.margin>
+               <Insets bottom="40.0" left="30.0" right="30.0" />
+            </BorderPane.margin>
+            <children>
+               <AnchorPane prefHeight="121.0" prefWidth="704.0">
+                  <children>
+                     <Label fx:id="header_btn" layoutX="3.0" layoutY="3.0" prefHeight="17.0" prefWidth="193.0" text="At a Glance" textFill="WHITE">
+                        <font>
+                           <Font size="25.0" />
+                        </font>
+                     </Label>
+                     <Button fx:id="shopping_button" layoutX="2.0" layoutY="44.0" prefHeight="54.0" prefWidth="170.0" styleClass="button_global">
+                        <graphic>
+                           <HBox alignment="CENTER" mouseTransparent="true" prefHeight="22.0" prefWidth="65.0">
+                              <Label fx:id="shopping_text" prefHeight="22.0" prefWidth="124.0" text="Shopping" textFill="WHITE" />
+                              <Label fx:id="shopping_arrow" styleClass="arrow_in" text=" »" textFill="#fcfcfc" />
+                           </HBox>
+                        </graphic>
+                     </Button>
+                     <Button fx:id="flight_button" layoutX="183.0" layoutY="44.0" prefHeight="54.0" prefWidth="164.0" styleClass="button_global">
+                        <graphic>
+                           <HBox alignment="CENTER" mouseTransparent="true" prefHeight="22.0" prefWidth="65.0">
+                              <Label fx:id="flight_text" prefHeight="22.0" prefWidth="118.0" text="My Flight" textFill="WHITE" />
+                              <Label fx:id="flight_arrow" styleClass="arrow_in" text=" »" textFill="#fcfcfc" />
+                           </HBox>
+                        </graphic>
+                     </Button>
+                     <Button fx:id="login_button" layoutX="678.0" layoutY="43.0" onAction="#login" prefHeight="54.0" prefWidth="54.0" styleClass="button_global">
+                        <graphic>
+                           <HBox alignment="CENTER" mouseTransparent="true" prefHeight="22.0" prefWidth="65.0">
+                              <children>
+                                 <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" styleClass="arrow_in">
+                                    <image>
+                                       <Image url="@static/651c9d85-0550-41ab-985c-32d1bd324188.png" />
+                                    </image>
+                                 </ImageView>
+                              </children>
+                           </HBox>
+                        </graphic>
+                     </Button>
+                     <Button fx:id="language_toggle" layoutX="614.0" layoutY="43.0" onAction="#alternate_language" prefHeight="54.0" prefWidth="54.0" styleClass="button_global">
+                        <graphic>
+                           <HBox alignment="CENTER" mouseTransparent="true" prefHeight="22.0" prefWidth="65.0">
+                              <children>
+                                 <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" styleClass="arrow_in">
+                                    <image>
+                                       <Image url="@static/language.png" />
+                                    </image>
+                                 </ImageView>
+                              </children>
+                           </HBox>
+                        </graphic>
+                     </Button>
+                  </children>
+               </AnchorPane>
+            </children>
+         </VBox>
+      </bottom>
+      <center>
+         <Label id="blinkLabel" fx:id="welcomeLabel" text="Welcome" textFill="#fcfcfc" BorderPane.alignment="CENTER">
+            <font>
+               <Font size="35.0" />
+            </font>
+         </Label>
+      </center>
+   </BorderPane>
+</StackPane>

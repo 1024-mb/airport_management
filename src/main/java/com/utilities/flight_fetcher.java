@@ -68,7 +68,6 @@ public class flight_fetcher {
 
         HtmlPage page = webClient.getPage("https://airports.malaysiaairports.com.my/en/klia2/flight-information/departures");
 
-        System.out.println(page.asXml());
         DomNode container = page.querySelector("ant-pagination \\!mb-10 css-pjsbzo");
         Iterator<DomNode> children = container.getChildren().iterator();
 

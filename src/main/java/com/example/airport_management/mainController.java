@@ -31,6 +31,7 @@ public class mainController {
     }
 
     // called from within the main fxml page when the account icon is clicked
+    @FXML
     public void loadLogin(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("startPage.fxml"));
         Parent root = loader.load();
