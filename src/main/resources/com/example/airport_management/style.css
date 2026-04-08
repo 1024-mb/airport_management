@@ -24,6 +24,33 @@
     -fx-cursor: hand;
 }
 
+.button_menu {
+    -fx-background-color: white;
+    -fx-border-radius: 5px;
+    -fx-border-color: white;
+
+}
+
+.spinner {
+    -fx-background-color: white;
+    -fx-border-color: white;
+}
+
+.table-view {
+    -fx-font-size: 15px;
+}
+.table-view .table-cell {
+    -fx-alignment: CENTER;
+}
+
+
+/*
+#9E2A2B --> red
+#81B29A  --> green
+#6C8EBF  --> blue
+
+*/
+
 .table-view .column-header-background {
     -fx-background-color: #3d405b;
 }
@@ -36,11 +63,12 @@
 .table-view .column-header .label {
     -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
-    -fx-alignment: CENTER_LEFT;
+    -fx-alignment: CENTER;
+    -fx-text-alignment: CENTER;
 }
 
 .root {
-    -fx-font-family: Inter;
+    -fx-font-family: "Inter";
 }
 
 #arrow {

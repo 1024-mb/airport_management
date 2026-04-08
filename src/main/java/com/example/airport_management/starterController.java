@@ -32,9 +32,22 @@ public class starterController {
     @FXML private Label flight_text;
 
     @FXML private Label welcomeLabel;
+    @FXML private Label db_label;
+
     @FXML private Button login_button;
+    @FXML private Button database_button;
 
     @FXML Label header_btn;
+
+
+    public void database_entry(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("databases_entry.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
 
     public void alternate_text(String[] messages, Label label) {
         SequentialTransition seqTransition = new SequentialTransition();
@@ -61,13 +74,18 @@ public class starterController {
 
     @FXML
     public void initialize() {
+        if(Session.getInstance().get_user_id() != 3 || !(Session.getInstance().isAuthenticated())) {
+            database_button.setVisible(false);
+            database_button.setDisable(true);
+            db_label.setVisible(false);
+        }
+
         Platform.runLater(() -> {
             Set<Node> nodes = root.lookupAll(".arrow_in");
 
             ParallelTransition parallelTransition = new ParallelTransition();
 
             for (Node node : nodes) {
-
                 FadeTransition fade = new FadeTransition(Duration.seconds(2), node);
                 fade.setFromValue(1.0);
                 fade.setToValue(0.0);
@@ -107,6 +125,31 @@ public class starterController {
     @FXML
     public void alternate_language() {
 
+    }
+
+    public void shopping(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(main.class.getResource("shops_map.fxml"));
+
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    public void flights(ActionEvent event) throws Exception {
+        FXMLLoader loader = new FXMLLoader(main.class.getResource("terminals_page.fxml"));
+
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+
+        departuresController controller = loader.getController();
+
+        controller.add_columns_departures();
     }
 
     @FXML

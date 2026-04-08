@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="root" prefHeight="800.0" prefWidth="760.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airport_management.databaseController">
+<VBox fx:id="root" prefHeight="800.0" prefWidth="793.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airport_management.databaseController">
    <children>
       <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="800.0" prefWidth="793.0" VBox.vgrow="ALWAYS">
          <children>
@@ -26,8 +26,8 @@
                         <Image url="@../../../../../../target/classes/static/Malaysia_Airports_Logo.png" />
                      </image>
                   </ImageView>
-                  <Button fx:id="home_button" layoutX="739.0" layoutY="3.0" onAction="#back" prefHeight="52.0" prefWidth="52.0" style="-fx-padding: 0;" styleClass="button_global" />
-                  <ImageView fitHeight="33.0" fitWidth="27.0" layoutX="751.0" layoutY="17.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" style="-fx-padding: 0px;">
+                  <Button fx:id="home_button" layoutX="746.0" layoutY="3.0" onAction="#back" prefHeight="45.0" prefWidth="45.0" style="-fx-padding: 0;" styleClass="button_global" />
+                  <ImageView fitHeight="33.0" fitWidth="27.0" layoutX="755.0" layoutY="13.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" style="-fx-padding: 0px;">
                      <image>
                         <Image url="@static/back.png" />
                      </image>
@@ -49,6 +49,7 @@
                   </HBox>
                </graphic>
             </Button>
+            <TableView fx:id="planeTableView1" layoutX="7.0" layoutY="127.0" prefHeight="656.0" prefWidth="780.0" />
          </children>
       </AnchorPane>
    </children>

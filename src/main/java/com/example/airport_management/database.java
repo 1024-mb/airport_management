@@ -3,6 +3,9 @@ package com.example.airport_management;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+
 
 //cd /Users/msajjad/IdeaProjects/airport_management/src/main/java/com/example/airport_management/
 public class database {
@@ -113,7 +116,7 @@ public class database {
         public void setDelayedDateTime(String delayedDateTime) {this.DelayedDateTime.set(delayedDateTime);}
         public void setDepartureDateTime(String departureDateTime) {this.DepartureDateTime.set(departureDateTime);}
 
-        private Journey(SimpleIntegerProperty journeyID, SimpleStringProperty departureDateTime, SimpleStringProperty delayedDateTime, SimpleStringProperty departureGate, SimpleIntegerProperty planeID, SimpleStringProperty flightNumber) {
+        Journey(SimpleIntegerProperty journeyID, SimpleStringProperty departureDateTime, SimpleStringProperty delayedDateTime, SimpleStringProperty departureGate, SimpleIntegerProperty planeID, SimpleStringProperty flightNumber) {
             JourneyID = journeyID;
             DepartureDateTime = departureDateTime;
             DelayedDateTime = delayedDateTime;
@@ -158,7 +161,60 @@ public class database {
             AirlineID = airlineID;
             AirlineName = airlineName;
         }
+    }
+    public static class TerminalFlightList {
+        private SimpleStringProperty flightNumber;
+        private SimpleStringProperty plane;
+        private SimpleStringProperty departureTime;
+        private ImageView airlineLogo;
+        private SimpleStringProperty status;
+        private SimpleStringProperty destination;
+        private SimpleStringProperty gate;
+        private SimpleIntegerProperty JourneyID;
 
+        TerminalFlightList(SimpleStringProperty flightNumber, SimpleStringProperty plane, SimpleStringProperty departureTime, ImageView airlineLogo, SimpleStringProperty destination, SimpleStringProperty status, SimpleStringProperty gate, SimpleIntegerProperty JourneyID) {
+            this.flightNumber = flightNumber;
+            this.plane = plane;
+            this.departureTime = departureTime;
+            this.airlineLogo = airlineLogo;
+            this.destination = destination;
+            this.status = status;
+            this.gate = gate;
+            this.JourneyID = JourneyID;
+        }
+
+        public Integer getJourneyID() {return JourneyID.get();}
+        public SimpleIntegerProperty journeyIDProperty() {return JourneyID;}
+        public void setJourneyID(int journeyID) {this.JourneyID.set(journeyID);}
+
+        public String getFlightNumber() {return flightNumber.get();}
+        public SimpleStringProperty flightNumberProperty() {return flightNumber;}
+        public void setFlightNumber(String flightNumber) {this.flightNumber.set(flightNumber);}
+
+        public String getPlane() {return plane.get();}
+        public SimpleStringProperty planeProperty() {return plane;}
+        public void setPlane(String plane) {this.plane.set(plane);}
+
+        public ImageView getAirlineLogo() {return airlineLogo;}
+        public void setAirlineLogo(ImageView airlineLogo) {this.airlineLogo = airlineLogo;}
+
+        public String getDepartureTime() {return departureTime.get();}
+        public void setDepartureTime(String departureTime) {this.departureTime.set(departureTime);}
+        public SimpleStringProperty departureProperty() {return departureTime;}
+
+
+        public String getStatus() {return status.get();}
+        public SimpleStringProperty statusProperty() {return status;}
+        public void setStatus(String status) {this.status.set(status);}
+
+        public String getDestination() {return destination.get();}
+        public SimpleStringProperty destinationProperty() {return destination;}
+        public void setDestination(String destination) {this.destination.set(destination);}
+
+
+        public String getGate() {return gate.get();}
+        public SimpleStringProperty gateProperty() {return gate;}
+        public void setGate(String gate) {this.gate.set(gate);}
     }
 
 }

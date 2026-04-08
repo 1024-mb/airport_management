@@ -35,7 +35,7 @@
                            <Font size="25.0" />
                         </font>
                      </Label>
-                     <Button fx:id="shopping_button" layoutX="2.0" layoutY="44.0" prefHeight="54.0" prefWidth="170.0" styleClass="button_global">
+                     <Button fx:id="shopping_button" layoutX="2.0" layoutY="44.0" onAction="#shopping" prefHeight="54.0" prefWidth="170.0" styleClass="button_global">
                         <graphic>
                            <HBox alignment="CENTER" mouseTransparent="true" prefHeight="22.0" prefWidth="65.0">
                               <Label fx:id="shopping_text" prefHeight="22.0" prefWidth="124.0" text="Shopping" textFill="WHITE" />
@@ -43,7 +43,7 @@
                            </HBox>
                         </graphic>
                      </Button>
-                     <Button fx:id="flight_button" layoutX="183.0" layoutY="44.0" prefHeight="54.0" prefWidth="164.0" styleClass="button_global">
+                     <Button fx:id="flight_button" layoutX="183.0" layoutY="44.0" onAction="#flights" prefHeight="54.0" prefWidth="164.0" styleClass="button_global">
                         <graphic>
                            <HBox alignment="CENTER" mouseTransparent="true" prefHeight="22.0" prefWidth="65.0">
                               <Label fx:id="flight_text" prefHeight="22.0" prefWidth="118.0" text="My Flight" textFill="WHITE" />
@@ -75,6 +75,15 @@
                                  </ImageView>
                               </children>
                            </HBox>
+                        </graphic>
+                     </Button>
+                     <Button fx:id="database_button" layoutX="550.0" layoutY="43.0" onAction="#database_entry" prefHeight="54.0" prefWidth="54.0" styleClass="button_global" >
+                        <graphic>
+                           <Label fx:id="db_label" layoutX="564.0" layoutY="59.0" styleClass="arrow_in" text="DB" textFill="WHITE">
+                              <font>
+                                 <Font size="17.0" />
+                              </font>
+                           </Label>
                         </graphic>
                      </Button>
                   </children>

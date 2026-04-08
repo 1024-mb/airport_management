@@ -24,12 +24,6 @@ import java.util.Objects;
 //cd /Users/msajjad/IdeaProjects/airport_management/src/main/java/com/example/airport_management/
 
 public class mainController {
-    @FXML
-    private WebView mainWebView;
-    public void loadMap() {
-        System.out.println("hos");
-    }
-
     // called from within the main fxml page when the account icon is clicked
     @FXML
     public void loadLogin(ActionEvent event) throws IOException {

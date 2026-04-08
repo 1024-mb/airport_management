@@ -23,8 +23,6 @@ public class main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("main.fxml"));
         Parent root = fxmlLoader.load();
 
-        mainController controller = fxmlLoader.getController();
-        controller.loadMap();
 
         Scene scene = new Scene(root);
         stage.setTitle("SkyFlow");

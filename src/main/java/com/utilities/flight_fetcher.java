@@ -62,7 +62,7 @@ public class flight_fetcher {
 
     public static void fetch_flights_all() throws IOException {
         WebClient webClient = new WebClient();
-        webClient.setCssErrorHandler(new SilentCssErrorHandler()); // This suppresses the CSS errors
+        webClient.setCssErrorHandler(new SilentCssErrorHandler());
         webClient.setJavaScriptErrorListener(new SilentJavaScriptErrorListener());
         webClient.getOptions().setJavaScriptEnabled(false);
 
@@ -79,25 +79,18 @@ public class flight_fetcher {
 
             HtmlElement child;
             while (children.hasNext()) {
-                // Each individual card
                 DomNodeList<DomNode> cards = page.querySelectorAll("ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-11 css-pjsbzo");
 
-                // Gets the data for flight information - a list of all the data in flight information
                 DomNodeList<DomNode> flight_info = page.querySelectorAll("flex gap-2 items-center justify-center md:justify-start");
 
-                //Get departure data
                 DomNodeList<DomNode> departure_info = page.querySelectorAll("ant-col my-5 md:my-0 ant-col-xs-24 ant-col-md-7 css-pjsbzo");
 
-                //Get arrival data
                 DomNodeList<DomNode> arrival_info = page.querySelectorAll("ant-col !flex flex-col items-center md:justify-start ant-col-xs-24 ant-col-md-8 css-pjsbzo");
 
-                // get check-in/flight data
                 DomNodeList<DomNode> terminal_info = page.querySelectorAll("ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 ant-col-lg-5 css-pjsbzo");
 
-                // get boarding gates, etc.
                 DomNodeList<DomNode> boarding_info = page.querySelectorAll("ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-10 css-pjsbzo");
 
-                //Get boarding status, for example, "departed"/"final call", etc.
                 DomNodeList<DomNode> boarding_status = page.querySelectorAll("ant-row ant-row-center ant-row-middle css-pjsbzo");
 
 
