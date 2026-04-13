@@ -1,6 +1,7 @@
-package com.example.airport_management;
+package com.example.airport_management.utilities;
 
-import javafx.scene.Node;
+import com.example.airport_management.login;
+import com.example.airport_management.main;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,7 +15,7 @@ public class switchButton {
 
         if(Session.getInstance().isAuthenticated()) {
             ImageView imageView = (ImageView) graphic.getChildren().get(0);
-            imageView.setImage(new Image(main.class.getResource("static/logout.png").toExternalForm()));
+            imageView.setImage(new Image(main.class.getResource("/com/example/airport_management/static/logout.png").toExternalForm()));
             button.setOnAction(e -> {
                 try {
                     login.logout(e, button);
@@ -25,7 +26,7 @@ public class switchButton {
         }
         else {
             ImageView imageView = (ImageView) graphic.getChildren().get(0);
-            imageView.setImage(new Image(main.class.getResource("static/user.png").toExternalForm()));
+            imageView.setImage(new Image(main.class.getResource("/com/example/airport_management/static/user.png").toExternalForm()));
             button.setOnAction(e -> {
                 try {
                     login.login(e, button);

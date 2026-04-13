@@ -1,4 +1,4 @@
-package com.example.airport_management;
+package com.example.airport_management.models;
 import java.sql.Connection;
 import java.sql.DriverManager;
 

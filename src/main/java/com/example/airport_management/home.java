@@ -13,7 +13,7 @@ import java.io.IOException;
 public class home {
     @FXML
     public static void home(ActionEvent event) throws IOException {
-            FXMLLoader loader = new FXMLLoader(home.class.getResource("startPage.fxml"));
+            FXMLLoader loader = new FXMLLoader(home.class.getResource("/com/example/airport_management/startPage.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

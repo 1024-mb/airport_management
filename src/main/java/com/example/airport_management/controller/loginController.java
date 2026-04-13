@@ -1,9 +1,11 @@
-package com.example.airport_management;
+package com.example.airport_management.controller;
 
-import com.almasb.fxgl.entity.action.Action;
+import com.example.airport_management.main;
+import com.example.airport_management.models.DatabaseConnection;
+import com.example.airport_management.utilities.Session;
+import com.example.airport_management.login;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -83,7 +84,7 @@ public class loginController {
     }
 
     public void signup(ActionEvent event) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("signup.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airport_management/signup.fxml"));
 
         Parent root = loader.load();
         Scene scene = new Scene(root);
@@ -207,7 +208,7 @@ public class loginController {
                     PreparedStatement pstmt = connectDB.prepareStatement(connectionQuery);
                     pstmt.executeUpdate(connectionQuery);
 
-                    FXMLLoader loader2 = new FXMLLoader(login.class.getResource("login.fxml"));
+                    FXMLLoader loader2 = new FXMLLoader(login.class.getResource("/com/example/airport_management/login.fxml"));
                     Parent root2 = loader2.load();
                     Scene scene2 = new Scene(root2);
                     stage.setScene(scene2);
@@ -247,7 +248,7 @@ public class loginController {
 
                 if (queryOutput.getString("Password").equals(password) && queryOutput.getString("PRIVILEGE").equals("Admin")) {
                     Session.getInstance().login(queryOutput.getInt("UserID"));
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("databases_entry.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airport_management/databases_entry.fxml"));
                     Parent root = loader.load();
                     Scene scene = new Scene(root);
                     Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

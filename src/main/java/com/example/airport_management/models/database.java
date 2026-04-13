@@ -1,9 +1,8 @@
-package com.example.airport_management;
+package com.example.airport_management.models;
 
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 
 
@@ -24,9 +23,9 @@ public class database {
         public void setPlaneLayout(String planeLayout) {this.PlaneLayout.set(planeLayout);}
         public void setPassengers(int passengers) {this.Passengers.set(passengers);}
 
-        Plane(SimpleIntegerProperty planeID,
-                      SimpleStringProperty manufacturer, SimpleStringProperty model, SimpleIntegerProperty flightAttendants,
-                      SimpleIntegerProperty passengers, SimpleStringProperty planeLayout) {
+        public Plane(SimpleIntegerProperty planeID,
+                     SimpleStringProperty manufacturer, SimpleStringProperty model, SimpleIntegerProperty flightAttendants,
+                     SimpleIntegerProperty passengers, SimpleStringProperty planeLayout) {
 
             PlaneID = planeID;
             Manufacturer = manufacturer;
@@ -74,11 +73,11 @@ public class database {
             this.Duration.set(duration);
         }
 
-        Flight(SimpleStringProperty FlightNumber,
-               SimpleIntegerProperty airlineID,
-               SimpleStringProperty origin,
-               SimpleStringProperty destination,
-               SimpleIntegerProperty duration) {
+        public Flight(SimpleStringProperty FlightNumber,
+                      SimpleIntegerProperty airlineID,
+                      SimpleStringProperty origin,
+                      SimpleStringProperty destination,
+                      SimpleIntegerProperty duration) {
             this.FlightNumber = FlightNumber;
             this.AirlineID = airlineID;
             this.Origin = origin;
@@ -116,7 +115,7 @@ public class database {
         public void setDelayedDateTime(String delayedDateTime) {this.DelayedDateTime.set(delayedDateTime);}
         public void setDepartureDateTime(String departureDateTime) {this.DepartureDateTime.set(departureDateTime);}
 
-        Journey(SimpleIntegerProperty journeyID, SimpleStringProperty departureDateTime, SimpleStringProperty delayedDateTime, SimpleStringProperty departureGate, SimpleIntegerProperty planeID, SimpleStringProperty flightNumber) {
+        public Journey(SimpleIntegerProperty journeyID, SimpleStringProperty departureDateTime, SimpleStringProperty delayedDateTime, SimpleStringProperty departureGate, SimpleIntegerProperty planeID, SimpleStringProperty flightNumber) {
             JourneyID = journeyID;
             DepartureDateTime = departureDateTime;
             DelayedDateTime = delayedDateTime;
@@ -157,7 +156,7 @@ public class database {
         public void setAirlineName(String airlineName) {this.AirlineName.set(airlineName);}
         public void setAirlineID(int airlineID) {this.AirlineID.set(airlineID);}
 
-        Airline(SimpleIntegerProperty airlineID, SimpleStringProperty airlineName) {
+        public Airline(SimpleIntegerProperty airlineID, SimpleStringProperty airlineName) {
             AirlineID = airlineID;
             AirlineName = airlineName;
         }
@@ -172,7 +171,7 @@ public class database {
         private SimpleStringProperty gate;
         private SimpleIntegerProperty JourneyID;
 
-        TerminalFlightList(SimpleStringProperty flightNumber, SimpleStringProperty plane, SimpleStringProperty departureTime, ImageView airlineLogo, SimpleStringProperty destination, SimpleStringProperty status, SimpleStringProperty gate, SimpleIntegerProperty JourneyID) {
+        public TerminalFlightList(SimpleStringProperty flightNumber, SimpleStringProperty plane, SimpleStringProperty departureTime, ImageView airlineLogo, SimpleStringProperty destination, SimpleStringProperty status, SimpleStringProperty gate, SimpleIntegerProperty JourneyID) {
             this.flightNumber = flightNumber;
             this.plane = plane;
             this.departureTime = departureTime;

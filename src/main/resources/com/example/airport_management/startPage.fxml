@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="root" prefHeight="800.0" prefWidth="793.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airport_management.starterController">
+<StackPane fx:id="root" prefHeight="800.0" prefWidth="793.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airport_management.controller.starterController">
    <BorderPane prefHeight="800.0" prefWidth="760.0" styleClass="overlay">
       <top>
          <VBox alignment="CENTER" prefHeight="0.0" prefWidth="754.0" spacing="10.0" BorderPane.alignment="CENTER">
@@ -64,20 +64,7 @@
                            </HBox>
                         </graphic>
                      </Button>
-                     <Button fx:id="language_toggle" layoutX="614.0" layoutY="43.0" onAction="#alternate_language" prefHeight="54.0" prefWidth="54.0" styleClass="button_global">
-                        <graphic>
-                           <HBox alignment="CENTER" mouseTransparent="true" prefHeight="22.0" prefWidth="65.0">
-                              <children>
-                                 <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" styleClass="arrow_in">
-                                    <image>
-                                       <Image url="@static/language.png" />
-                                    </image>
-                                 </ImageView>
-                              </children>
-                           </HBox>
-                        </graphic>
-                     </Button>
-                     <Button fx:id="database_button" layoutX="550.0" layoutY="43.0" onAction="#database_entry" prefHeight="54.0" prefWidth="54.0" styleClass="button_global" >
+                     <Button fx:id="database_button" layoutX="615.0" layoutY="43.0" onAction="#database_entry" prefHeight="54.0" prefWidth="54.0" styleClass="button_global">
                         <graphic>
                            <Label fx:id="db_label" layoutX="564.0" layoutY="59.0" styleClass="arrow_in" text="DB" textFill="WHITE">
                               <font>

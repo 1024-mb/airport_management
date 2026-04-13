@@ -1,6 +1,9 @@
-package com.example.airport_management;
+package com.example.airport_management.controller;
 
-import javafx.animation.Animation;
+import com.example.airport_management.utilities.Session;
+import com.example.airport_management.login;
+import com.example.airport_management.main;
+import com.example.airport_management.utilities.switchButton;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -26,22 +29,17 @@ public class starterController {
 
     @FXML
     private StackPane root;
-
     @FXML private Label shopping_text;
-
     @FXML private Label flight_text;
-
     @FXML private Label welcomeLabel;
     @FXML private Label db_label;
-
     @FXML private Button login_button;
     @FXML private Button database_button;
-
     @FXML Label header_btn;
 
 
     public void database_entry(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("databases_entry.fxml"));
+        FXMLLoader loader = new FXMLLoader(main.class.getResource("/com/example/airport_management/databases_entry.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -115,7 +113,7 @@ public class starterController {
         // Source - https://stackoverflow.com/a/29049996
         // Posted by Elltz, modified by community. See post 'Timeline' for change history
         // Retrieved 2026-03-22, License - CC BY-SA 3.0
-        BackgroundImage myBI= new BackgroundImage(new Image(Objects.requireNonNull(getClass().getResource("/static/Dawn.png")).toExternalForm(),root.getWidth(),root.getHeight(),false,false),
+        BackgroundImage myBI= new BackgroundImage(new Image(Objects.requireNonNull(getClass().getResource("/com/example/airport_management/static/Dawn.png")).toExternalForm(),root.getWidth(),root.getHeight(),false,false),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
         root.setBackground(new Background(myBI));
@@ -128,7 +126,7 @@ public class starterController {
     }
 
     public void shopping(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(main.class.getResource("shops_map.fxml"));
+        FXMLLoader loader = new FXMLLoader(main.class.getResource("/com/example/airport_management/shops_map.fxml"));
 
         Parent root = loader.load();
         Scene scene = new Scene(root);
@@ -139,7 +137,7 @@ public class starterController {
 
     @FXML
     public void flights(ActionEvent event) throws Exception {
-        FXMLLoader loader = new FXMLLoader(main.class.getResource("terminals_page.fxml"));
+        FXMLLoader loader = new FXMLLoader(main.class.getResource("/com/example/airport_management/terminals_page.fxml"));
 
         Parent root = loader.load();
         Scene scene = new Scene(root);

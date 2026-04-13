@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="root" prefHeight="800.0" prefWidth="793.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airport_management.databaseController">
+<VBox fx:id="root" prefHeight="800.0" prefWidth="793.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airport_management.controller.databaseController">
    <children>
       <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="800.0" prefWidth="793.0" VBox.vgrow="ALWAYS">
          <children>
@@ -38,7 +38,7 @@
             <TableView fx:id="airlineTableView" layoutX="8.0" layoutY="128.0" prefHeight="656.0" prefWidth="782.0" />
             <TableView fx:id="flightTableView" layoutX="8.0" layoutY="129.0" prefHeight="656.0" prefWidth="780.0" />
             <TableView fx:id="planeTableView" layoutX="8.0" layoutY="128.0" prefHeight="656.0" prefWidth="780.0" />
-            <Button fx:id="insertButton" layoutX="729.0" layoutY="89.0" mnemonicParsing="false" onAction="#insertData" prefHeight="32.0" prefWidth="61.0" styleClass="button_database" text="Insert">
+            <Button fx:id="insertButton" layoutX="711.0" layoutY="89.0" mnemonicParsing="false" onAction="#insertData" prefHeight="32.0" prefWidth="78.0" styleClass="button_database" text="Insert">
                <graphic>
                   <HBox>
                      <ImageView fitHeight="12.0" fitWidth="12.0">
@@ -48,6 +48,9 @@
                      </ImageView>
                   </HBox>
                </graphic>
+               <font>
+                  <Font size="15.0" />
+               </font>
             </Button>
             <TableView fx:id="planeTableView1" layoutX="7.0" layoutY="127.0" prefHeight="656.0" prefWidth="780.0" />
          </children>

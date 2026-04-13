@@ -15,8 +15,15 @@ module com.example.airport_management {
     requires java.sql;
     requires java.desktop;
     requires com.gluonhq.charm.glisten;
+    requires htmlunit.core.js;
 
     opens com.example.airport_management to javafx.fxml;
     exports com.example.airport_management;
+    exports com.example.airport_management.controller;
+    opens com.example.airport_management.controller to javafx.fxml;
+    exports com.example.airport_management.utilities;
+    opens com.example.airport_management.utilities to javafx.fxml;
+    exports com.example.airport_management.models;
+    opens com.example.airport_management.models to javafx.fxml;
 
 }

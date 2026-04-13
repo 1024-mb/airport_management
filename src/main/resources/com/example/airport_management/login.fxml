@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="800.0" prefWidth="793.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airport_management.loginController">
+<VBox prefHeight="800.0" prefWidth="793.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airport_management.controller.loginController">
    <children>
       <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="800.0" prefWidth="793.0" style="-fx-background-color: white;" VBox.vgrow="ALWAYS">
          <children>
@@ -65,11 +65,11 @@
                         <Font size="20.0" />
                      </font>
                   </Label>
-            <Hyperlink layoutX="332.0" layoutY="385.0" onAction="#signup" prefHeight="28.0" prefWidth="155.0" text="Create Account" textFill="#3d405b">
+            <Hyperlink alignment="CENTER" contentDisplay="CENTER" layoutX="151.0" layoutY="389.0" onAction="#signup" prefHeight="30.0" prefWidth="499.0" text="Create Account" textFill="#3d405b">
                <font>
                   <Font size="17.0" />
                </font></Hyperlink>
-            <Label fx:id="error_label" alignment="CENTER" contentDisplay="CENTER" layoutX="155.0" layoutY="153.0" prefHeight="17.0" prefWidth="496.0" textAlignment="CENTER" textFill="#9e2a2b">
+            <Label fx:id="error_label" alignment="CENTER" contentDisplay="CENTER" layoutX="152.0" layoutY="153.0" prefHeight="17.0" prefWidth="496.0" textAlignment="CENTER" textFill="#9e2a2b">
                <font>
                   <Font size="15.0" />
                </font>

@@ -1,16 +1,14 @@
-package com.example.airport_management;
+package com.example.airport_management.controller;
 
-import javafx.collections.FXCollections;
+import com.example.airport_management.models.DatabaseConnection;
+import com.example.airport_management.utilities.flightStatus;
+import com.example.airport_management.main;
+import com.example.airport_management.utilities.airlineLogo;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -50,8 +48,7 @@ public class flightDetailController {
             ResultSet queryOutput = statement.executeQuery(connectionQuery);
 
             queryOutput.next();
-
-            String logo = com.example.airport_management.airlineLogo.get_logo(queryOutput.getInt("AirlineID"));
+            String logo = airlineLogo.get_logo(queryOutput.getInt("AirlineID"));
 
             planelayout.setImage(new Image(queryOutput.getString("PlaneLayout"), 792, 357, false, true));
             airlinelogo.setImage(new Image(main.class.getResource(logo).openStream(), 47, 47, true, true));
@@ -73,7 +70,7 @@ public class flightDetailController {
             flight_attendants.setText("Flight Attendant: " + queryOutput.getString("FlightAttendants"));
 
             flightStatus flightStatus = new flightStatus();
-            String stats = flightStatus.getStatus(departure.getText());
+            String stats = flightStatus.getStatus(queryOutput.getString("DepartureDateTime"));
 
             if(stats.equals("Final Call")) {
                 status.setText("Final Call");
@@ -92,8 +89,8 @@ public class flightDetailController {
                 status.getStyleClass().add("-fx-text-fill: #9E2A2B;");
             }
 
-            if(Integer.parseInt(queryOutput.getString("Duration")) >=1 ) {duration.setText("Duration: "+queryOutput.getString("Duration") + " hr");}
-            else {duration.setText("Duration: "+(Integer.parseInt(queryOutput.getString("Duration")) * 60) + " min");}
+            duration.setText("Duration: "+queryOutput.getString("Duration") + " hr");
+
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

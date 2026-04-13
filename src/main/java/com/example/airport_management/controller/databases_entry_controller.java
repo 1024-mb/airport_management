@@ -1,10 +1,9 @@
-package com.example.airport_management;
+package com.example.airport_management.controller;
 
+import com.example.airport_management.models.DatabaseConnection;
+import com.example.airport_management.main;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
-import javafx.application.Platform;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,11 +15,9 @@ import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -71,7 +68,7 @@ public class databases_entry_controller {
     public void home(ActionEvent event) throws IOException {com.example.airport_management.home.home(event);}
 
     public void back(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("databases_entry.fxml"));
+        FXMLLoader loader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/databases_entry.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -80,7 +77,7 @@ public class databases_entry_controller {
     }
 
     public void sales_summary(ActionEvent event) throws Exception {
-        FXMLLoader loader = new FXMLLoader(main.class.getResource("dashboard.fxml"));
+        FXMLLoader loader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/dashboard.fxml"));
 
         Parent root = loader.load();
         Scene scene = new Scene(root);
@@ -121,7 +118,8 @@ public class databases_entry_controller {
                                    "\nFROM TICKET" +
                                    "\nINNER JOIN JOURNEY ON JOURNEY.JourneyID = TICKET.JourneyID" +
                                    "\nWHERE JOURNEY.DepartureDateTime >= NOW() - INTERVAL 7 DAY"+
-                                   "\nGROUP BY SALES_DAY;";
+                                   "\nGROUP BY SALES_DAY" +
+                                   "\nORDER BY SALES_DAY ASC;";
 
         String flight_time = "SELECT SUM(FLIGHT.Duration) AS TOTAL, ROUND(AVG(FLIGHT.Duration), 1) AS AVERAGE, MAX(FLIGHT.Duration) AS MAXIMUM, MIN(FLIGHT.Duration) AS MINIMUM" +
                              " FROM FLIGHT" +
@@ -133,7 +131,9 @@ public class databases_entry_controller {
                                 " FROM ("+
                                 "SELECT COUNT(*) AS ticket_count" +
                                 " FROM TICKET" +
-                                " GROUP BY JourneyID" +
+                                " INNER JOIN JOURNEY ON JOURNEY.JourneyID = TICKET.JourneyID" +
+                                " WHERE JOURNEY.DepartureDateTime >= NOW() - INTERVAL 7 DAY" +
+                                " GROUP BY JOURNEY.JourneyID" +
                                 ") t;";
 
         Connection connectDB = DatabaseConnection.connect();
@@ -151,9 +151,9 @@ public class databases_entry_controller {
 
             ResultSet queryOutput_flight_time = statement.executeQuery(flight_time);
             queryOutput_flight_time.next();
-            controller.avgFlightTime.setText("Avg Flight Time: " + queryOutput_flight_time.getString("AVERAGE") + "h");
-            controller.maxFlightTime.setText("Max Flight Time: " + queryOutput_flight_time.getString("MAXIMUM") + "h");
-            controller.minFlightTime.setText("Min Flight Time: " + queryOutput_flight_time.getString("MINIMUM") + "h");
+            controller.avgFlightTime.setText(queryOutput_flight_time.getString("AVERAGE") + "h");
+            controller.maxFlightTime.setText(queryOutput_flight_time.getString("MAXIMUM") + "h");
+            controller.minFlightTime.setText(queryOutput_flight_time.getString("MINIMUM") + "h");
 
             ObservableList<PieChart.Data> pieData_destinations = FXCollections.observableArrayList();
             ObservableList<PieChart.Data> pieData_airline = FXCollections.observableArrayList();
@@ -208,7 +208,6 @@ public class databases_entry_controller {
             XYChart.Series series = new XYChart.Series();
             series.setName("Revenue");
 
-            controller.sales_graph.setTitle("Sales Over Last 7 Days");
             controller.x.setLabel("Date");
             controller.y.setLabel("Total Sales /RM");
             controller.x.setAutoRanging(true);
@@ -220,7 +219,9 @@ public class databases_entry_controller {
                 String date = money.getString("SALES_DAY");
                 categories.add(date);
 
+
                 int total = Integer.parseInt(money.getString("TOTAL"));
+
 
                 series.getData().add(new XYChart.Data<>(date, total));
             }
@@ -237,7 +238,7 @@ public class databases_entry_controller {
     }
 
     public void flight_database(ActionEvent event) throws Exception {
-        FXMLLoader loader = new FXMLLoader(main.class.getResource("databases.fxml"));
+        FXMLLoader loader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/databases.fxml"));
 
         Parent root = loader.load();
         Scene scene = new Scene(root);
@@ -250,7 +251,7 @@ public class databases_entry_controller {
     }
 
     public void journey_database(ActionEvent event) throws Exception {
-        FXMLLoader loader = new FXMLLoader(main.class.getResource("databases.fxml"));
+        FXMLLoader loader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/databases.fxml"));
 
         Parent root = loader.load();
         Scene scene = new Scene(root);
@@ -263,7 +264,7 @@ public class databases_entry_controller {
     }
 
     public void airline_database(ActionEvent event) throws Exception {
-        FXMLLoader loader = new FXMLLoader(main.class.getResource("databases.fxml"));
+        FXMLLoader loader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/databases.fxml"));
 
         Parent root = loader.load();
         Scene scene = new Scene(root);
@@ -276,7 +277,7 @@ public class databases_entry_controller {
     }
 
     public void plane_database(ActionEvent event) throws Exception {
-        FXMLLoader loader = new FXMLLoader(main.class.getResource("databases.fxml"));
+        FXMLLoader loader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/databases.fxml"));
 
         Parent root = loader.load();
         Scene scene = new Scene(root);

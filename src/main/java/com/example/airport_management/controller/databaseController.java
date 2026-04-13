@@ -1,8 +1,10 @@
-package com.example.airport_management;
+package com.example.airport_management.controller;
 
 //cd /Users/msajjad/IdeaProjects/airport_management/src/main/java/com/example/airport_management/
 
-import javafx.beans.Observable;
+import com.example.airport_management.models.DatabaseConnection;
+import com.example.airport_management.models.database;
+import com.example.airport_management.main;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -10,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -18,10 +21,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 
-import javax.xml.transform.Result;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,6 +32,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.example.airport_management.controller.databaseController.validation.*;
 
 public class databaseController {
     @FXML private TableView<database.Plane> planeTableView;
@@ -61,6 +64,7 @@ public class databaseController {
     @FXML private Button noButtonConfirm;
 
     @FXML private Label error_message;
+    @FXML private Label error_msg;
 
 
     @FXML private TextField Plane_PlaneLayout;
@@ -115,170 +119,12 @@ public class databaseController {
 
     }
 
-    boolean validate_data_airline(databaseController controller, Stage popupStage) {
-        if(!controller.Airline_AirlineName.getText().isEmpty()) {
-            if(controller.Airline_AirlineName.getText().matches("[a-zA-Z]+")) {
-                return true;
-            }
-            else {
-                show_error_stage(popupStage, "Invalid Airline Name");
-                return false;
-            }
-        }
-        else {
-            return false;
-        }
-    }
-
-    boolean validate_data_plane(databaseController controller, Stage popupStage) {
-        if(!controller.Plane_Passengers.getText().isEmpty() && !controller.Plane_PlaneLayout.getText().isEmpty()
-                && !controller.Plane_Model.getText().isEmpty() && !controller.Plane_Manufacturer.getText().isEmpty()) {
-
-            String error_message = "";
-            try {
-                new URL(controller.Plane_PlaneLayout.getText());
-
-                int passengers = Integer.parseInt(controller.Plane_Passengers.getText());
-                int attendants = Integer.parseInt(controller.Plane_FlightAttendants.getText());
-
-                if (passengers <= 0 || attendants <= 0 || passengers > 300 || attendants > 20) {
-                    error_message = "Abnormal Number Values (Passengers/Attendants)";
-                }
-
-            } catch (MalformedURLException ex) {
-                error_message = "Invalid URL";
-            } catch (NumberFormatException ex) {
-                error_message = "Please enter valid numbers";
-            }
-
-            if (!error_message.isEmpty()) {
-                show_error_stage(popupStage, error_message);
-                return false;
-
-            } else {
-                return true;
-            }
-        }
-        else {return false;}
-    }
-
-    boolean validate_data_journey(databaseController controller, Stage popupStage) {
-        if(!controller.Journey_DepartureDateTime.getText().isEmpty() && !controller.Journey_PlaneID.getText().isEmpty()
-        && !controller.Journey_DepartureGate.getText().isEmpty()) {
-
-            String time = controller.Journey_DepartureDateTime.getText();
-            String delayed_time = controller.Journey_DelayedDateTime.getText();
-
-            if(!time.matches("\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]) ([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d")) {
-                show_error_stage(popupStage, "Incorrect DateTime Format");
-                return false;
-            }
-            if(!(delayed_time.isEmpty() || delayed_time.equals("null")) && !delayed_time.matches("\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]) ([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d")) {
-                show_error_stage(popupStage, "Incorrect DateTime Format");
-                return false;
-            }
-
-            String verification = "SELECT * FROM PLANE WHERE PlaneID = " + controller.Journey_PlaneID.getText();
-            Connection connectDB = null;
-
-            try {
-                connectDB = DatabaseConnection.connect();
-                Statement statement = connectDB.createStatement();
-                ResultSet queryOutput = statement.executeQuery(verification);
-
-                if(!queryOutput.next()) {
-                    show_error_stage(popupStage, "No Plane Was Found With a Matching PlaneID");
-                    return false;
-                }
-                else {
-                    String verification_flight = "SELECT * FROM FLIGHT WHERE FlightNumber = \"" + controller.Journey_FlightNumber.getText() + "\"";
-                    Connection connectDB2 = null;
-
-                    try {
-                        connectDB2 = DatabaseConnection.connect();
-                        Statement statement2 = connectDB2.createStatement();
-                        ResultSet queryOutput2 = statement2.executeQuery(verification_flight);
-
-                        if (!queryOutput2.next()) {
-                            show_error_stage(popupStage, "No Plane Was Found With a Matching PlaneID");
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-
-                }
-
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
-        }
-        else {
-            show_error_stage(popupStage, "Please Ensure All Fields Are Filled");
-            return false;
-        }
-    }
-
-    boolean validate_data_flight(databaseController controller, Stage popupStage) {
-        if(!controller.Flight_FlightNumber.getText().isEmpty() && !controller.Flight_Origin.getText().isEmpty() &&
-           !controller.Flight_AirlineID.getText().isEmpty() && !controller.Flight_Duration.getText().isEmpty() &&
-           !controller.Flight_Destination.getText().isEmpty() ) {
-
-            String error_message = "";
-
-            flightList = FXCollections.observableArrayList();
-            String connectionQuery = "SELECT * from FLIGHT WHERE AirlineID=" + controller.Flight_AirlineID.getText() + ";";
-            Connection connectDB = null;
-
-            try {
-                connectDB = DatabaseConnection.connect();
-                Statement statement = connectDB.createStatement();
-                ResultSet queryOutput = statement.executeQuery(connectionQuery);
-                Integer duration = 0;
-                Integer airlineID = 0;
-
-                try {
-                    duration = Integer.valueOf(controller.Flight_Duration.getText());
-                    airlineID = Integer.valueOf(controller.Flight_AirlineID.getText());
-
-                } catch (NumberFormatException ex) {
-                    error_message = "enter an integer";
-                }
 
 
-                if (!queryOutput.next()) {
-                    error_message = "No airline matching AirlineID " + airlineID;
-                } else if (duration <= 0 || duration > 2000) {
-                    error_message = "Invalid Flight Duration";
-                } else if (!controller.Flight_FlightNumber.getText().matches("[a-zA-Z]{2}[0-9]{1,4}")) {
-                    error_message = "Invalid Flight Number Format";
-                }
-
-                if (!error_message.isEmpty()) {
-                    show_error_stage(popupStage, error_message);
-                    return false;
-                } else {
-                    return true;
-                }
-
-            } catch (Exception e) {
-                return false;
-            }
-        }
-        else {
-            show_error_stage(popupStage, "Please ensure all fields are filled");
-            return false;
-
-        }
-
-    }
-
-    void show_error_stage(Stage popupStage, String error_message) {
+    static void show_error_stage(Stage popupStage, String error_message) {
         Stage errorStage = new Stage();
-        FXMLLoader errorLoader = new FXMLLoader(main.class.getResource("validationPopup.fxml"));
+        FXMLLoader errorLoader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/validationPopup.fxml"));
+
         Parent errorRoot = null;
         try {
             errorRoot = errorLoader.load();
@@ -330,7 +176,7 @@ public class databaseController {
 
         //button.setGraphic();
         //button.setStyle();
-        //ImageView edit = new ImageView(main.class.getResource("static/edit.png").toExternalForm());
+        //ImageView edit = new ImageView(main.class.getResource("/com/example/airport_management/staticedit.png").toExternalForm());
         //edit.setFitHeight(20);
         //edit.setFitWidth(20);
 
@@ -341,23 +187,25 @@ public class databaseController {
 
              {
                  btn1.getStyleClass().add("button_database");
-                 ImageView edit = new ImageView(main.class.getResource("static/edit.png").toExternalForm());
+                 ImageView edit = new ImageView(main.class.getResource("/com/example/airport_management/static/edit.png").toExternalForm());
                  edit.setFitHeight(12);
                  edit.setFitWidth(12);
                  btn1.setGraphic(new HBox(edit));
 
                  btn2.getStyleClass().add("button_database");
-                 ImageView delete = new ImageView(main.class.getResource("static/delete.png").toExternalForm());
+                 ImageView delete = new ImageView(main.class.getResource("/com/example/airport_management/static/delete.png").toExternalForm());
                  delete.setFitHeight(12);
                  delete.setFitWidth(12);
                  btn2.setGraphic(new HBox(delete));
+
+                 setAlignment(Pos.CENTER);
 
                  btn1.setOnAction(e -> {
                      database.Plane rowData = getTableView().getItems().get(getIndex());
                      Stage stage = (Stage) root.getScene().getWindow();
 
                      Stage popupStage = new Stage();
-                     FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("popup_plane.fxml"));
+                     FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("/com/example/airport_management/popup_plane.fxml"));
                      Parent root = null;
 
                      try {
@@ -376,6 +224,9 @@ public class databaseController {
                      controller.Plane_Model.setText(rowData.getModel());
                      controller.Plane_Passengers.setText(String.valueOf(rowData.getPassengers()));
                      controller.Plane_FlightAttendants.setText(String.valueOf(rowData.getFlightAttendants()));
+
+                     validation validation = new validation();
+                     validation.live_validation_plane(controller);
 
                      controller.submitButton.setOnAction(e2 -> {
                          if(validate_data_plane(controller, popupStage) == true) {
@@ -414,17 +265,18 @@ public class databaseController {
                      boolean return_value = confirm_delete();
 
                      Connection connectDB = null;
-                     try {
-                         connectDB = DatabaseConnection.connect();
-                         String connectionQuery = "DELETE FROM PLANE WHERE PlaneID=" + rowData.getPlaneID() + ";";
-                         PreparedStatement pstmt = connectDB.prepareStatement(connectionQuery);
-                         pstmt.executeUpdate(connectionQuery);
 
-                     } catch (Exception ex) {
-                         throw new RuntimeException(ex);
-                     }
                      if(return_value==true) {
                          try {
+                             try {
+                                 connectDB = DatabaseConnection.connect();
+                                 String connectionQuery = "DELETE FROM PLANE WHERE PlaneID=" + rowData.getPlaneID() + ";";
+                                 PreparedStatement pstmt = connectDB.prepareStatement(connectionQuery);
+                                 pstmt.executeUpdate(connectionQuery);
+
+                             } catch (Exception ex) {
+                                 throw new RuntimeException(ex);
+                             }
                              btn2.setDisable(true);
                              btn1.setDisable(true);
                              refresh_plane();
@@ -478,10 +330,10 @@ public class databaseController {
 
     boolean confirm_delete() {
         Stage stage = (Stage) root.getScene().getWindow();
-        AtomicBoolean return_value = new AtomicBoolean(true);
+        AtomicBoolean return_value = new AtomicBoolean(false);
 
         Stage popupStage = new Stage();
-        FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("confirmation_box.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/confirmation_box.fxml"));
         Parent root = null;
 
         try {
@@ -510,7 +362,8 @@ public class databaseController {
     }
 
     public void back(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("databases_entry.fxml"));
+        FXMLLoader loader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/databases_entry.fxml"));
+
         Parent root = loader.load();
         Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -525,43 +378,78 @@ public class databaseController {
 
         Stage popupStage = new Stage();
 
+        Parent root = null;
         FXMLLoader fxmlLoader = null;
+        databaseController controller;
+        databaseController final_controller;
+
         switch(database_name.getText()){
             case "PLANE":
-                fxmlLoader = new FXMLLoader(main.class.getResource("popup_plane.fxml"));
+
+                fxmlLoader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/popup_plane.fxml"));
+                try {
+                    root = fxmlLoader.load();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                controller = fxmlLoader.getController();
+
+                validation.live_validation_plane(controller);
+
                 break;
 
             case "FLIGHT":
-                fxmlLoader = new FXMLLoader(main.class.getResource("popup_flight.fxml"));
+                fxmlLoader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/popup_flight.fxml"));
+
+                try {
+                    root = fxmlLoader.load();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                controller = fxmlLoader.getController();
+                live_validation_flight(controller);
+
+
                 break;
 
             case "AIRLINE":
-                fxmlLoader = new FXMLLoader(main.class.getResource("popup_airline.fxml"));
+                fxmlLoader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/popup_airline.fxml"));
+                try {
+                    root = fxmlLoader.load();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                controller = fxmlLoader.getController();
+                live_validation_airline(controller);
+
                 break;
 
             case "JOURNEY":
-                fxmlLoader = new FXMLLoader(main.class.getResource("popup_journey.fxml"));
+                fxmlLoader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/popup_journey.fxml"));
+                try {
+                    root = fxmlLoader.load();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                controller = fxmlLoader.getController();
+                live_validation_journey(controller);
+                break;
+
+            default:
+                controller = null;
                 break;
         }
-        Parent root = null;
-
-        try {
-            root = fxmlLoader.load();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-        databaseController controller = fxmlLoader.getController();
 
         popupStage.setScene(new Scene(root));
         popupStage.initOwner(stage);
         popupStage.show();
 
-
         controller.submitButton.setOnAction(e2 -> {
             String connectionQuery = "";
             switch(database_name.getText()){
                 case "PLANE":
-                    if(validate_data_plane(controller, popupStage) == true) {
+                    if(validate_data_plane(controller, popupStage)) {
                         connectionQuery = "INSERT INTO PLANE(Manufacturer, Model, Passengers, " +
                                 "FlightAttendants, PlaneLayout) " +
                                 "VALUES(\"" + controller.Plane_Manufacturer.getText() + "\", \"" + controller.Plane_Model.getText() +
@@ -570,7 +458,7 @@ public class databaseController {
                     }
                     break;
                 case "FLIGHT":
-                    if(validate_data_plane(controller, popupStage) == true) {
+                    if(validate_data_flight(controller, popupStage, true)) {
                         connectionQuery = "INSERT INTO FLIGHT(FlightNumber, AirlineID, Origin, " +
                                 "Destination, Duration) " +
                                 "VALUES(\"" + controller.Flight_FlightNumber.getText() + "\", " + controller.Flight_AirlineID.getText() + ", \"" + controller.Flight_Origin.getText() +
@@ -608,13 +496,15 @@ public class databaseController {
             Connection connectDB = null;
 
             try {
-                connectDB = DatabaseConnection.connect();
-                PreparedStatement pstmt = connectDB.prepareStatement(connectionQuery);
-                pstmt.executeUpdate(connectionQuery);
-                popupStage.close();
-
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
+                if(!connectionQuery.equals("")) {
+                    connectDB = DatabaseConnection.connect();
+                    PreparedStatement pstmt = connectDB.prepareStatement(connectionQuery);
+                    pstmt.executeUpdate(connectionQuery);
+                    popupStage.close();
+                }
+            }
+            catch (Exception ex) {
+                show_error_stage(popupStage, "An Error Occurred");
             }
             try {
                 switch(database_name.getText()) {
@@ -753,7 +643,7 @@ public class databaseController {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("768" + e.getMessage());
         }
 
         journeyTableView.setItems(journeyList);
@@ -794,6 +684,7 @@ public class databaseController {
 
         TableColumn<database.Flight, Void> Actions = new TableColumn("Actions");
         Actions.setMinWidth(120);
+        flightList = FXCollections.observableArrayList();
 
 
         Actions.setCellFactory(col -> new TableCell<>() {
@@ -802,14 +693,15 @@ public class databaseController {
             private final HBox box = new HBox(10, btn1, btn2);
 
             {
+                setAlignment(Pos.CENTER);
                 btn1.getStyleClass().add("button_database");
-                ImageView edit = new ImageView(main.class.getResource("static/edit.png").toExternalForm());
+                ImageView edit = new ImageView(main.class.getResource("/com/example/airport_management/static/edit.png").toExternalForm());
                 edit.setFitHeight(12);
                 edit.setFitWidth(12);
                 btn1.setGraphic(new HBox(edit));
 
                 btn2.getStyleClass().add("button_database");
-                ImageView delete = new ImageView(main.class.getResource("static/delete.png").toExternalForm());
+                ImageView delete = new ImageView(main.class.getResource("/com/example/airport_management/static/delete.png").toExternalForm());
                 delete.setFitHeight(12);
                 delete.setFitWidth(12);
                 btn2.setGraphic(new HBox(delete));
@@ -819,7 +711,7 @@ public class databaseController {
                     Stage stage = (Stage) root.getScene().getWindow();
 
                     Stage popupStage = new Stage();
-                    FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("popup_flight.fxml"));
+                    FXMLLoader fxmlLoader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/popup_flight.fxml"));
                     Parent root = null;
 
                     try {
@@ -840,8 +732,10 @@ public class databaseController {
                     controller.Flight_Destination.setText(rowData.getDestination());
                     controller.Flight_Duration.setText(String.valueOf(rowData.getDuration()));
 
+                    live_validation_flight(controller);
+
                     controller.submitButton.setOnAction(e2 -> {
-                        if(validate_data_flight(controller, popupStage)) {
+                        if(validate_data_flight(controller, popupStage, false)) {
                             String connectionQuery = "UPDATE FLIGHT SET AirlineID=\"" + controller.Flight_AirlineID.getText() +
                                     "\", Origin=\"" + controller.Flight_Origin.getText()
                                     + "\"" + ", Destination=\"" + controller.Flight_Destination.getText() + "\"," +
@@ -878,12 +772,13 @@ public class databaseController {
                         Connection connectDB = null;
                         try {
                             connectDB = DatabaseConnection.connect();
+                            String connection_1 = "DELETE FROM AIRLINE WHERE AirlineID ";
                             String connectionQuery = "DELETE FROM FLIGHT WHERE FlightNumber=\"" + rowData.getFlightNumber() + "\";";
                             PreparedStatement pstmt = connectDB.prepareStatement(connectionQuery);
                             pstmt.executeUpdate(connectionQuery);
 
                         } catch (Exception ex) {
-                            throw new RuntimeException(ex);
+                            show_error_stage(new Stage(), "Cannot Delete This Item - Foreign Key Constraint Failed");
                         }
                         try {
                             btn2.setDisable(true);
@@ -957,14 +852,15 @@ public class databaseController {
             private final HBox box = new HBox(10, btn1, btn2);
 
             {
+                setAlignment(Pos.CENTER);
                 btn1.getStyleClass().add("button_database");
-                ImageView edit = new ImageView(main.class.getResource("static/edit.png").toExternalForm());
+                ImageView edit = new ImageView(main.class.getResource("/com/example/airport_management/static/edit.png").toExternalForm());
                 edit.setFitHeight(12);
                 edit.setFitWidth(12);
                 btn1.setGraphic(new HBox(edit));
 
                 btn2.getStyleClass().add("button_database");
-                ImageView delete = new ImageView(main.class.getResource("static/delete.png").toExternalForm());
+                ImageView delete = new ImageView(main.class.getResource("/com/example/airport_management/static/delete.png").toExternalForm());
                 delete.setFitHeight(12);
                 delete.setFitWidth(12);
                 btn2.setGraphic(new HBox(delete));
@@ -975,7 +871,7 @@ public class databaseController {
 
 
                     Stage popupStage = new Stage();
-                    FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("popup_airline.fxml"));
+                    FXMLLoader fxmlLoader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/popup_airline.fxml"));
                     Parent root = null;
                     try {
                         root = fxmlLoader.load();
@@ -986,7 +882,7 @@ public class databaseController {
                     databaseController controller = fxmlLoader.getController();
 
                     controller.Airline_AirlineName.setText(rowData.getAirlineName());
-
+                    live_validation_airline(controller);
 
                     popupStage.setScene(new Scene(root));
                     popupStage.initOwner(stage);
@@ -1005,7 +901,8 @@ public class databaseController {
                                 popupStage.close();
 
                             } catch (Exception ex) {
-                                throw new RuntimeException(ex);
+                                show_error_stage(new Stage(), "Could Not perform action");
+
                             }
                             try {
                                 btn2.setDisable(true);
@@ -1032,7 +929,7 @@ public class databaseController {
                             pstmt.executeUpdate(connectionQuery);
 
                         } catch (Exception ex) {
-                            throw new RuntimeException(ex);
+                            show_error_stage(new Stage(), "Cannot Delete This Item - Foreign Key Constraint Failed");
                         }
                         try {
                             btn2.setDisable(true);
@@ -1081,6 +978,8 @@ public class databaseController {
 
         airlineTableView.getColumns().addAll(AirlineID, AirlineName, Actions);
     }
+
+
     void add_columns_journey() throws Exception {
         journeyTableView.setEditable(true);
 
@@ -1139,9 +1038,11 @@ public class databaseController {
             }
             journeyTableView.setItems(journeyList);
 
+
+
             //button.setGraphic();
             //button.setStyle();
-            //ImageView edit = new ImageView(main.class.getResource("static/edit.png").toExternalForm());
+            //ImageView edit = new ImageView(main.class.getResource("/com/example/airport_management/static/edit.png").toExternalForm());
             //edit.setFitHeight(20);
             //edit.setFitWidth(20);
 
@@ -1151,14 +1052,15 @@ public class databaseController {
                 private final HBox box = new HBox(10, btn1, btn2);
 
                 {
+                    setAlignment(Pos.CENTER);
                     btn1.getStyleClass().add("button_database");
-                    ImageView edit = new ImageView(main.class.getResource("static/edit.png").toExternalForm());
+                    ImageView edit = new ImageView(main.class.getResource("/com/example/airport_management/static/edit.png").toExternalForm());
                     edit.setFitHeight(12);
                     edit.setFitWidth(12);
                     btn1.setGraphic(new HBox(edit));
 
                     btn2.getStyleClass().add("button_database");
-                    ImageView delete = new ImageView(main.class.getResource("static/delete.png").toExternalForm());
+                    ImageView delete = new ImageView(main.class.getResource("/com/example/airport_management/static/delete.png").toExternalForm());
                     delete.setFitHeight(12);
                     delete.setFitWidth(12);
                     btn2.setGraphic(new HBox(delete));
@@ -1168,7 +1070,8 @@ public class databaseController {
                         Stage stage = (Stage) root.getScene().getWindow();
 
                         Stage popupStage = new Stage();
-                        FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("popup_journey.fxml"));
+
+                        FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("/com/example/airport_management/popup_journey.fxml"));
                         Parent root = null;
 
                         try {
@@ -1182,6 +1085,8 @@ public class databaseController {
                         popupStage.initOwner(stage);
                         popupStage.show();
 
+                        live_validation_journey(controller);
+
                         controller.Journey_PlaneID.setText(String.valueOf(rowData.getPlaneID()));
                         controller.Journey_FlightNumber.setText(rowData.getFlightNumber());
                         controller.Journey_DepartureGate.setText(rowData.getDepartureGate());
@@ -1192,14 +1097,14 @@ public class databaseController {
                         controller.submitButton.setOnAction(e2 -> {
                             if(validate_data_journey(controller, popupStage)) {
                                 String connectionQuery = "";
-
                                 if(!controller.Journey_DelayedDateTime.getText().isEmpty() && !controller.Journey_DelayedDateTime.getText().equals("null")) {
                                     connectionQuery = "UPDATE JOURNEY" +
                                             " SET DepartureDateTime = \"" + controller.Journey_DepartureDateTime.getText()
                                             + "\", DelayedDateTime = \"" + controller.Journey_DelayedDateTime.getText() +
                                             "\", DepartureGate = \"" + controller.Journey_DepartureGate.getText() +
                                             "\", PlaneID = \"" + controller.Journey_PlaneID.getText() +
-                                            "\", FlightNumber = \"" + controller.Journey_FlightNumber.getText() + "\";";
+                                            "\", FlightNumber = \"" + controller.Journey_FlightNumber.getText() + "\"" +
+                                            " WHERE JourneyID = " + rowData.getJourneyID() + ";";
                                 }
                                 else {
                                     connectionQuery = "UPDATE JOURNEY" +
@@ -1207,7 +1112,8 @@ public class databaseController {
                                             + "\", DelayedDateTime = NULL"
                                             + ", DepartureGate = \"" + controller.Journey_DepartureGate.getText() +
                                             "\", PlaneID = \"" + controller.Journey_PlaneID.getText() +
-                                            "\", FlightNumber = \"" + controller.Journey_FlightNumber.getText() + "\";";
+                                            "\", FlightNumber = \"" + controller.Journey_FlightNumber.getText() + "\"" +
+                                            " WHERE JourneyID = " + rowData.getJourneyID() + ";";
                                 }
 
                                 Connection connectDB = null;
@@ -1218,7 +1124,7 @@ public class databaseController {
                                     popupStage.close();
 
                                 } catch (Exception ex) {
-                                    throw new RuntimeException(ex);
+                                    show_error_stage(new Stage(), "Could not Perform This Action.");
                                 }
                                 try {
                                     btn2.setDisable(true);
@@ -1251,7 +1157,7 @@ public class databaseController {
                             pstmt.executeUpdate(connectionQuery);
 
                         } catch (Exception ex) {
-                            throw new RuntimeException(ex);
+                            show_error_stage(new Stage(), "Could not Perform This Action.");
                         }
                         if(return_value==true) {
                             try {
@@ -1287,4 +1193,306 @@ public class databaseController {
         journeyTableView.getColumns().addAll(JourneyID, DepartureDateTime, DelayedDateTime, DepartureGate, PlaneID, FlightNumber, Actions);
     }
 
+    public class validation {
+        static void live_validation_flight(databaseController controller) {
+            controller.Flight_Duration.textProperty().addListener((observable, oldValue, newValue) -> {
+                controller.submitButton.setDisable(false);
+                controller.error_msg.setText("");
+
+                try {
+                    int value = Integer.parseInt(newValue);
+                    if(value < 0 || value > 20) {controller.error_msg.setText("Invalid Duration"); controller.submitButton.setDisable(true);}
+                }
+                catch(Exception exc) {controller.error_msg.setText("Invalid Duration"); controller.submitButton.setDisable(true);}
+            });
+            controller.Flight_FlightNumber.textProperty().addListener((observable, oldValue, newValue) -> {
+                controller.submitButton.setDisable(false);
+                controller.error_msg.setText("");
+
+                if (!controller.Flight_FlightNumber.getText().matches("[A-Z]{2,6}[0-9]{1,7}")) {
+                    controller.error_msg.setText("Invalid Flight Number");
+                    controller.submitButton.setDisable(true);
+                }
+            });
+            controller.Flight_AirlineID.textProperty().addListener((observable, oldValue, newValue) -> {
+                controller.submitButton.setDisable(false);
+                controller.error_msg.setText("");
+
+                try {
+                    int value = Integer.parseInt(newValue);
+                    if(value < 0 || value> 2000) {controller.error_msg.setText("Invalid AirlineID"); controller.submitButton.setDisable(true);}
+                }
+                catch(Exception exc) {controller.error_msg.setText("Invalid AirlineID"); controller.submitButton.setDisable(true);}
+            });
+        }
+        static void live_validation_journey(databaseController controller) {
+
+            controller.Journey_DepartureGate.textProperty().addListener(
+                    (observable, oldValue, newValue) -> {
+                        controller.submitButton.setDisable(false);
+                        controller.error_msg.setText("");
+
+                        if(!newValue.matches("[A-Z]{1}[0-9]*")) {
+                            controller.error_msg.setText("Invalid Departure Gate");
+                            controller.submitButton.setDisable(true);
+                        }
+                    }
+            );
+
+            controller.Journey_DepartureDateTime.textProperty().addListener((observable, oldValue, newValue) -> {
+                controller.submitButton.setDisable(false);
+                controller.error_msg.setText("");
+
+                if(!newValue.matches("\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]) ([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d")) {
+                    controller.error_msg.setText("Invalid DateTime");
+                    controller.submitButton.setDisable(true);
+                }
+            });
+            controller.Journey_DelayedDateTime.textProperty().addListener((observable, oldValue, newValue) -> {
+                controller.submitButton.setDisable(false);
+                controller.error_msg.setText("");
+
+                if(!newValue.matches("\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]) ([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d")) {
+                    controller.error_msg.setText("Invalid DateTime");
+                    controller.submitButton.setDisable(true);
+                }
+            });
+            controller.Journey_FlightNumber.textProperty().addListener((observable, oldValue, newValue) -> {
+                controller.submitButton.setDisable(false);
+                controller.error_msg.setText("");
+
+                if (!controller.Journey_FlightNumber.getText().matches("[A-Z]{2,6}[0-9]{1,7}")) {
+                    controller.error_msg.setText("Invalid Flight Number");
+                    controller.submitButton.setDisable(true);
+                }
+            });
+            controller.Journey_PlaneID.textProperty().addListener((observable, oldValue, newValue) -> {
+                controller.submitButton.setDisable(false);
+                controller.error_msg.setText("");
+
+                try {
+                    int out = Integer.parseInt(newValue);
+                } catch (NumberFormatException EC) {
+                    controller.error_msg.setText("Invalid PlaneID");
+                    controller.submitButton.setDisable(true);
+                }
+            });
+        }
+        static void live_validation_airline(databaseController controller) {
+            controller.Airline_AirlineName.textProperty().addListener((observable, oldValue, newValue) -> {
+                controller.submitButton.setDisable(false);
+                controller.error_msg.setText("");
+
+                if(!newValue.matches("[a-zA-Z ]+")) {
+                    controller.error_msg.setText("Invalid AirlineID");
+                    controller.submitButton.setDisable(true);
+                }
+
+            });
+        }
+        static void live_validation_plane(databaseController controller) {
+
+            controller.Plane_FlightAttendants.textProperty().addListener((observable, oldValue, newValue) -> {
+                controller.submitButton.setDisable(false);
+                controller.error_msg.setText("");
+
+                try {
+                    int value = Integer.parseInt(newValue);
+                    if(value < 0 || value> 20) {controller.error_msg.setText("Invalid Number of Flight Attendants."); controller.submitButton.setDisable(true);}
+                }
+                catch(Exception exc) {controller.error_msg.setText("Invalid Number of Flight Attendants."); controller.submitButton.setDisable(true);}
+            });
+            controller.Plane_Passengers.textProperty().addListener((observable, oldValue, newValue) -> {
+                controller.submitButton.setDisable(false);
+                controller.error_msg.setText("");
+
+                try {
+                    int value = Integer.parseInt(newValue);
+                    if(value < 0 || value> 900) {controller.error_msg.setText("Invalid Number of Passengers."); controller.submitButton.setDisable(true);}
+                }
+                catch(Exception exc) {controller.error_msg.setText("Invalid Number of Passengers."); controller.submitButton.setDisable(true);}
+            });
+
+        }
+        static boolean validate_data_airline(databaseController controller, Stage popupStage) {
+            if(!controller.Airline_AirlineName.getText().isEmpty()) {
+                if(controller.Airline_AirlineName.getText().matches("[a-zA-Z ]+")) {
+                    return true;
+                }
+                else {
+                    show_error_stage(popupStage, "Invalid Airline Name");
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+        }
+
+        static boolean validate_data_plane(databaseController controller, Stage popupStage) {
+            if(!controller.Plane_Passengers.getText().isEmpty() && !controller.Plane_PlaneLayout.getText().isEmpty()
+                    && !controller.Plane_Model.getText().isEmpty() && !controller.Plane_Manufacturer.getText().isEmpty()) {
+
+                String error_message = "";
+                try {
+                    new URL(controller.Plane_PlaneLayout.getText());
+
+                    int passengers = Integer.parseInt(controller.Plane_Passengers.getText());
+                    int attendants = Integer.parseInt(controller.Plane_FlightAttendants.getText());
+
+                    if (passengers <= 0 || attendants <= 0 || passengers > 300 || attendants > 20) {
+                        error_message = "Abnormal Number Values (Passengers/Attendants)";
+                    }
+
+                } catch (MalformedURLException ex) {
+                    error_message = "Invalid URL";
+                } catch (NumberFormatException ex) {
+                    error_message = "Please enter valid numbers";
+                }
+
+                if (!error_message.isEmpty()) {
+                    show_error_stage(popupStage, error_message);
+                    return false;
+
+                } else {
+                    return true;
+                }
+            }
+            else {
+                show_error_stage(popupStage, "Please ensure all fields are filled");
+                return false;
+            }
+        }
+
+        static boolean validate_data_journey(databaseController controller, Stage popupStage) {
+            if(!controller.Journey_DepartureDateTime.getText().isEmpty() && !controller.Journey_PlaneID.getText().isEmpty()
+                    && !controller.Journey_DepartureGate.getText().isEmpty()) {
+
+                if(!controller.Journey_DepartureGate.getText().matches("[A-Z]{1}[0-9]*")) {
+                    show_error_stage(popupStage, "Incorrect Gate Format");
+                    return false;
+                }
+
+                String time = controller.Journey_DepartureDateTime.getText();
+                String delayed_time = controller.Journey_DelayedDateTime.getText();
+
+                if(!time.matches("\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]) ([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d")) {
+                    show_error_stage(popupStage, "Incorrect DateTime Format");
+                    return false;
+                }
+                if(!(delayed_time.isEmpty() || delayed_time.toLowerCase().equals("null")) && !delayed_time.matches("\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]) ([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d")) {
+                    show_error_stage(popupStage, "Incorrect DateTime Format");
+                    return false;
+                }
+
+                String verification = "SELECT * FROM PLANE WHERE PlaneID = " + controller.Journey_PlaneID.getText() + ";";
+                Connection connectDB = null;
+
+                try {
+                    connectDB = DatabaseConnection.connect();
+                    Statement statement = connectDB.createStatement();
+                    ResultSet queryOutput = statement.executeQuery(verification);
+
+                    if(!queryOutput.next()) {
+                        show_error_stage(popupStage, "No Plane Was Found With a Matching PlaneID");
+                        return false;
+                    }
+                    else {
+                        String verification_flight = "SELECT * FROM FLIGHT WHERE FlightNumber = \"" + controller.Journey_FlightNumber.getText() + "\"";
+                        Connection connectDB2 = null;
+
+                        try {
+                            connectDB2 = DatabaseConnection.connect();
+                            Statement statement2 = connectDB2.createStatement();
+                            ResultSet queryOutput2 = statement2.executeQuery(verification_flight);
+
+                            if (!queryOutput2.next()) {
+                                show_error_stage(popupStage, "No Flight Was Found With a Matching Flight Number");
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        } catch (Exception e) {
+                            show_error_stage(popupStage, "An Error Occurred");
+                            return false;
+                        }
+
+                    }
+
+                } catch (Exception e) {
+                    show_error_stage(popupStage, "Invalid PlaneID");
+                    return false;
+                }
+
+            }
+            else {
+                show_error_stage(popupStage, "Please Ensure All Fields Are Filled");
+                return false;
+            }
+        }
+
+        static boolean validate_data_flight(databaseController controller, Stage popupStage, boolean insert) {
+            if(!controller.Flight_FlightNumber.getText().isEmpty() && !controller.Flight_Origin.getText().isEmpty() &&
+                    !controller.Flight_AirlineID.getText().isEmpty() && !controller.Flight_Duration.getText().isEmpty() &&
+                    !controller.Flight_Destination.getText().isEmpty() ) {
+
+                String error_message = "";
+
+                String connectionQuery = "SELECT * from AIRLINE WHERE AirlineID=" + controller.Flight_AirlineID.getText() + ";";
+                Connection connectDB = null;
+                String flight_confirm = "SELECT * FROM FLIGHT WHERE FlightNumber= \"" + controller.Flight_FlightNumber.getText() + "\";";
+
+                try {
+                    connectDB = DatabaseConnection.connect();
+                    Statement statement = connectDB.createStatement();
+
+                    if(insert) {
+                        ResultSet out = statement.executeQuery(flight_confirm);
+                        if (out.next()) {
+                            error_message = "A Flight With That FlightNumber Already Exists";
+                        }
+                    }
+
+                    ResultSet queryOutput = statement.executeQuery(connectionQuery);
+                    Integer duration = 0;
+                    Integer airlineID = 0;
+
+                    try {
+                        duration = Integer.valueOf(controller.Flight_Duration.getText());
+                        airlineID = Integer.valueOf(controller.Flight_AirlineID.getText());
+
+                    } catch (NumberFormatException ex) {
+                        error_message = "enter an integer";
+                    }
+
+
+                    if (!queryOutput.next()) {
+                        error_message = "No airline matching AirlineID " + airlineID;
+                    } else if (duration <= 0 || duration > 20) {
+                        error_message = "Invalid Flight Duration";
+                    } else if (!controller.Flight_FlightNumber.getText().matches("[A-Z]{2,6}[0-9]{1,7}")) {
+                        error_message = "Invalid Flight Number Format";
+                    }
+
+                    if (!error_message.isEmpty()) {
+                        show_error_stage(popupStage, error_message);
+                        return false;
+                    } else {
+                        return true;
+                    }
+
+                } catch (Exception e) {
+                    show_error_stage(popupStage, "Invalid AirlineID");
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            else {
+                show_error_stage(popupStage, "Please ensure all fields are filled");
+                return false;
+
+            }
+
+        }
+    }
 }

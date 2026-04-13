@@ -1,4 +1,4 @@
-package com.example.airport_management;
+package com.example.airport_management.utilities;
 
 public class Session {
     private static final Session instance = new Session();

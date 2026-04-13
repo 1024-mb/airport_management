@@ -1,4 +1,4 @@
-package com.example.airport_management;
+package com.example.airport_management.utilities;
 
 public class calculateTotal {
     public static double befTaxTot(String type, int quantity) {

@@ -1,38 +1,39 @@
-package com.example.airport_management;
+package com.example.airport_management.controller;
 
-import com.gluonhq.charm.glisten.animation.FadeOutRightBigTransition;
+import com.example.airport_management.*;
+import com.example.airport_management.models.DatabaseConnection;
+import com.example.airport_management.models.database;
+import com.example.airport_management.utilities.Session;
+import com.example.airport_management.utilities.airlineLogo;
+import com.example.airport_management.utilities.flightStatus;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.IOException;
 import java.sql.*;
-import java.util.AbstractMap;
+import java.text.DecimalFormat;
 
-import static com.example.airport_management.calculateTotal.befTaxTot;
-import static org.htmlunit.platform.Platform.getIndex;
+import static com.example.airport_management.utilities.calculateTotal.befTaxTot;
+
 
 public class departuresController {
     @FXML private TableView<database.TerminalFlightList> terminal1_table;
@@ -42,11 +43,20 @@ public class departuresController {
     @FXML private ChoiceBox<String> seat_type;
     @FXML private Button submitButton;
     @FXML private Button cancelButton;
-    @FXML private Label net_total;
-    @FXML private Label gross_total;
+
     @FXML private VBox flights;
     @FXML private Button history_btn;
 
+    @FXML private Label error_label;
+    @FXML private Label net_total;
+    @FXML private Label gross_total;
+
+    @FXML private TextField cardNumber;
+    @FXML private TextField expiryMonth;
+    @FXML private TextField expiryYear;
+
+    @FXML private Label seat_type_label;
+    @FXML private Label quantity_label;
 
 
     public void home(ActionEvent event) throws IOException {
@@ -67,31 +77,31 @@ public class departuresController {
                 new PropertyValueFactory<database.TerminalFlightList, ImageView>("airlineLogo"));
         airlineLogo_t1.getStyleClass().add("table_column");
 
-        TableColumn flightNumber_t1 = new TableColumn("Number");
-        flightNumber_t1.setMaxWidth(100);
+        TableColumn flightNumber_t1 = new TableColumn("Flight No.");
+        flightNumber_t1.setPrefWidth(130);
         flightNumber_t1.setCellValueFactory(
                 new PropertyValueFactory<database.TerminalFlightList, String>("flightNumber"));
         flightNumber_t1.getStyleClass().add("table_column");
 
-        TableColumn destination_t1 = new TableColumn("destination");
+        TableColumn destination_t1 = new TableColumn("Destination");
         destination_t1.setMinWidth(160);
         destination_t1.setCellValueFactory(
                 new PropertyValueFactory<database.TerminalFlightList, String>("destination"));
         destination_t1.getStyleClass().add("table_column");
 
-        TableColumn departureTime_t1 = new TableColumn("departureTime");
+        TableColumn departureTime_t1 = new TableColumn("Departure");
         departureTime_t1.setMinWidth(117.14);
         departureTime_t1.setCellValueFactory(
                 new PropertyValueFactory<database.TerminalFlightList, Label>("departureTime"));
         departureTime_t1.getStyleClass().add("table_column");
 
-        TableColumn gate_t1 = new TableColumn("gate");
+        TableColumn gate_t1 = new TableColumn("Gate");
         gate_t1.setMinWidth(50);
         gate_t1.setCellValueFactory(
                 new PropertyValueFactory<database.TerminalFlightList, String>("gate"));
         gate_t1.getStyleClass().add("table_column");
 
-        TableColumn status_t1 = new TableColumn("status");
+        TableColumn status_t1 = new TableColumn("Status");
         status_t1.setMinWidth(117.14);
         status_t1.setCellValueFactory(
                 new PropertyValueFactory<database.TerminalFlightList, String>("status"));
@@ -100,6 +110,11 @@ public class departuresController {
 
         TableColumn<database.TerminalFlightList, Void> Actions_t1 = new TableColumn("Actions");
         Actions_t1.setMinWidth(219);
+
+        terminal1_table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        terminal2_table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        DecimalFormat df = new DecimalFormat("#.00");
 
 
         Actions_t1.setCellFactory(col -> new TableCell<>() {
@@ -113,25 +128,27 @@ public class departuresController {
                     HBox.setMargin(btn2, new Insets(0, 0, 0, 75));
                 }
                 btn1.getStyleClass().add("button_database");
-                ImageView book = new ImageView(main.class.getResource("static/book.png").toExternalForm());
+                ImageView book = new ImageView(main.class.getResource("/com/example/airport_management/static/book.png").toExternalForm());
                 book.setFitHeight(14);
                 book.setFitWidth(14);
                 btn1.setGraphic(new HBox(book));
 
                 btn2.getStyleClass().add("button_database");
-                ImageView Info = new ImageView(main.class.getResource("static/details.png").toExternalForm());
+                ImageView Info = new ImageView(main.class.getResource("/com/example/airport_management/static/details.png").toExternalForm());
                 Info.setFitHeight(14);
                 Info.setFitWidth(14);
                 btn2.setGraphic(new HBox(Info));
 
                 HBox.setMargin(btn1, new Insets(0, 0, 0, 45));
 
+
                 btn1.setOnAction(e -> {
                     database.TerminalFlightList rowData = getTableView().getItems().get(getIndex());
                     Stage stage = (Stage) root.getScene().getWindow();
 
                     Stage booking = new Stage();
-                    FXMLLoader bookingLoader = new FXMLLoader(main.class.getResource("booking.fxml"));
+                    FXMLLoader bookingLoader = new FXMLLoader(main.class.getResource("/com/example/airport_management/booking.fxml"));
+
                     Parent bookingRoot = null;
 
                     try {
@@ -149,19 +166,40 @@ public class departuresController {
 
                     departuresController.seat_type.getSelectionModel().selectedItemProperty().addListener(
                             (obs, oldVal, newVal) -> {
-                                double total = befTaxTot(newVal, departuresController.quantity_choice.getValue());
+                                departuresController.submitButton.setDisable(false);
+                                departuresController.error_label.setText("");
 
-                                departuresController.gross_total.setText("RM " + total);
-                                departuresController.net_total.setText("RM " + (total * 1.05));
+                                if(departuresController.quantity_choice.getValue() > 0) {
+                                    double total = befTaxTot(newVal, departuresController.quantity_choice.getValue());
+
+                                    departuresController.gross_total.setText("RM " + df.format(total));
+
+                                    departuresController.net_total.setText("RM " + df.format(total * 1.05));
+                                }
+                                else {
+                                    departuresController.error_label.setText("Please Select a Valid Number of Seats");
+                                    departuresController.submitButton.setDisable(true);
+                                }
                             }
                     );
 
                     departuresController.quantity_choice.valueProperty().addListener(
                             (obs, oldVal, newVal) -> {
-                                double total = befTaxTot(departuresController.seat_type.getValue(), newVal);
+                                departuresController.error_label.setText("");
+                                departuresController.submitButton.setDisable(false);
 
-                                departuresController.gross_total.setText("RM " + total);
-                                departuresController.net_total.setText("RM " + (total * 1.05));                            }
+                                if(departuresController.seat_type.getValue() != null) {
+
+                                    double total = befTaxTot(departuresController.seat_type.getValue(), newVal);
+
+                                    departuresController.gross_total.setText("RM " + total);
+                                    departuresController.net_total.setText("RM " + (total * 1.05));
+                                }
+                                else {
+                                    departuresController.error_label.setText("Please Select a Seat Type");
+                                    departuresController.submitButton.setDisable(true);
+                                }
+                            }
                     );
 
                     departuresController.cancelButton.setOnAction(event -> {
@@ -171,80 +209,183 @@ public class departuresController {
                     departuresController.submitButton.setOnAction(event -> {
                         String gross = departuresController.gross_total.getText();
                         String net = departuresController.net_total.getText();
+                        String seatType = departuresController.seat_type.getValue();
+                        Integer quantity = departuresController.quantity_choice.getValue();
 
-                        Stage checkout = new Stage();
-                        FXMLLoader checkoutLoader = new FXMLLoader(main.class.getResource("checkout.fxml"));
-                        Parent checkoutRoot = null;
+                        if(!gross.isEmpty() && !net.isEmpty()) {
+                            if (Float.parseFloat(gross.substring(3)) > 0 && Float.parseFloat(net.substring(3)) > 0) {
+                                Stage checkout = new Stage();
+                                FXMLLoader checkoutLoader = new FXMLLoader(main.class.getResource("/com/example/airport_management/checkout.fxml"));
+                                Parent checkoutRoot = null;
 
-                        try {
-                            checkoutRoot = checkoutLoader.load();
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
-
-                        departuresController checkoutLoaderController = checkoutLoader.getController();
-
-                        checkoutLoaderController.net_total.setText(net);
-                        checkoutLoaderController.gross_total.setText(gross);
-
-                        checkout.setScene(new Scene(checkoutRoot));
-                        checkout.initOwner(stage);
-                        checkout.show();
-
-                        checkoutLoaderController.submitButton.setOnAction(event2 -> {
-                            String seatType = departuresController.seat_type.getValue();
-                            int quantity = departuresController.quantity_choice.getValue();
-
-                            String connectionQuery = "";
-                            int ticketType = 0;
-                            int cost;
-
-
-
-                            switch(seatType) {
-                                case "Economy Class":
-                                    ticketType = 1;
-
-                                    break;
-                                case "Premium Economy":
-                                    ticketType = 2;
-                                    break;
-
-                                case "Business Class":
-                                    ticketType = 3;
-                                    break;
-
-                                case "First Class":
-                                    ticketType = 4;
-                                    break;
-                            }
-
-                            connectionQuery = "INSERT INTO TICKET(JourneyID, TicketTypeID, UserID) " +
-                                    "VALUES(" + rowData.getJourneyID() + ", " + ticketType + ", " +
-                                    Session.getInstance().get_user_id() +
-                                    ");";
-
-                            Connection connectDB = null;
-
-                            try {
-                                connectDB = DatabaseConnection.connect();
-                                PreparedStatement pstmt = connectDB.prepareStatement(connectionQuery);
-
-                                while(quantity > 0) {
-                                    pstmt.executeUpdate(connectionQuery);
-                                    quantity--;
+                                try {
+                                    checkoutRoot = checkoutLoader.load();
+                                } catch (IOException ex) {
+                                    throw new RuntimeException(ex);
                                 }
-                                checkout.close();
-                                booking.close();
 
-                            } catch (Exception ex) {
-                                throw new RuntimeException(ex);
+                                departuresController checkoutLoaderController = checkoutLoader.getController();
+
+                                checkoutLoaderController.net_total.setText(net);
+                                checkoutLoaderController.gross_total.setText(gross);
+                                checkoutLoaderController.seat_type_label.setText(seatType);
+                                checkoutLoaderController.quantity_label.setText(String.valueOf(quantity));
+
+                                checkout.setScene(new Scene(checkoutRoot));
+                                checkout.initOwner(stage);
+                                checkout.show();
+
+                                checkoutLoaderController.cardNumber.textProperty().addListener((observable, oldValue, newValue) -> {
+                                    checkoutLoaderController.error_label.setText("");
+                                    checkoutLoaderController.submitButton.setDisable(false);
+
+                                    if(!newValue.matches("^[0-9 ]{13,19}$")) {
+                                        checkoutLoaderController.error_label.setText("Invalid Card Number.");
+                                        checkoutLoaderController.submitButton.setDisable(true);
+                                    }
+
+                                });
+
+                                checkoutLoaderController.expiryMonth.textProperty().addListener((observable, oldValue, newValue) -> {
+                                    checkoutLoaderController.error_label.setText("");
+                                    checkoutLoaderController.submitButton.setDisable(false);
+
+                                    try {
+                                        int value = Integer.parseInt(newValue);
+
+                                        if (!(value <= 12 && value >= 1)) {
+                                            checkoutLoaderController.error_label.setText("Invalid Expiry Month.");
+                                            checkoutLoaderController.submitButton.setDisable(true);
+                                        }
+                                    } catch (RuntimeException ex) {
+                                        checkoutLoaderController.error_label.setText("Invalid Expiry Month.");
+                                        checkoutLoaderController.submitButton.setDisable(true);
+                                    }
+                                });
+
+                                checkoutLoaderController.expiryYear.textProperty().addListener((observable, oldValue, newValue) -> {
+                                    checkoutLoaderController.error_label.setText("");
+                                    checkoutLoaderController.submitButton.setDisable(false);
+
+                                    try {
+                                        int value = Integer.parseInt(newValue);
+
+                                        if(!(26 <= value && value <= 34)) {
+                                            checkoutLoaderController.error_label.setText("Expiry Year must be between 2026 and 2034.");
+                                            checkoutLoaderController.submitButton.setDisable(true);
+                                        }
+                                    } catch (RuntimeException ex) {
+                                        checkoutLoaderController.error_label.setText("Invalid Expiry Year.");
+                                        checkoutLoaderController.submitButton.setDisable(true);
+                                    }
+                                });
+
+
+
+                                checkoutLoaderController.submitButton.setOnAction(event2 -> {
+                                    boolean insert = true;
+                                    String card = checkoutLoaderController.cardNumber.getText();
+                                    checkoutLoaderController.error_label.setText("");
+                                    checkoutLoaderController.submitButton.setDisable(false);
+
+                                    if(!card.matches("^[0-9 ]{13,19}$")) {
+                                        checkoutLoaderController.error_label.setText("Your Card Number is Invalid.");
+                                        checkoutLoaderController.submitButton.setDisable(true);
+                                        insert= false;
+                                    }
+
+                                    try {
+                                        Integer expiry_month = Integer.parseInt(checkoutLoaderController.expiryMonth.getText());
+                                        Integer expiry_year = Integer.parseInt(checkoutLoaderController.expiryYear.getText());
+
+                                        if(!(1 <= expiry_month && expiry_month <= 12)) {
+                                            checkoutLoaderController.error_label.setText("Invalid Expiry Month.");
+                                            checkoutLoaderController.submitButton.setDisable(true);
+                                            insert= false;
+                                        }
+
+                                        if(!(26 <= expiry_year && expiry_year <= 34)) {
+                                            checkoutLoaderController.error_label.setText("Expiry Year must be between 2026 and 2034.");
+                                            checkoutLoaderController.submitButton.setDisable(true);
+                                            insert = false;
+                                        }
+
+                                        if(expiry_month < 4 && expiry_year <= 26 || expiry_year <= 25) {
+                                            checkoutLoaderController.error_label.setText("Your Card is Expired.");
+                                            checkoutLoaderController.submitButton.setDisable(true);
+                                            insert=false;
+                                        }
+
+                                    }
+                                    catch(Exception ex) {
+                                        checkoutLoaderController.error_label.setText("Ensure the Numbers Entered Are Valid.");
+                                        checkoutLoaderController.submitButton.setDisable(true);
+                                        insert = false;
+                                    }
+
+                                    String connectionQuery = "";
+                                    int ticketType = 0;
+                                    int cost;
+
+                                    if(insert) {
+                                        switch (seatType) {
+                                            case "Economy Class":
+                                                ticketType = 1;
+
+                                                break;
+                                            case "Premium Economy":
+                                                ticketType = 2;
+                                                break;
+
+                                            case "Business Class":
+                                                ticketType = 3;
+                                                break;
+
+                                            case "First Class":
+                                                ticketType = 4;
+                                                break;
+                                        }
+
+                                        connectionQuery = "INSERT INTO TICKET(JourneyID, TicketTypeID, UserID) " +
+                                                "VALUES(" + rowData.getJourneyID() + ", " + ticketType + ", " +
+                                                Session.getInstance().get_user_id() +
+                                                ");";
+
+                                        Connection connectDB = null;
+
+                                        int quantity_2 = quantity;
+                                        try {
+                                            connectDB = DatabaseConnection.connect();
+                                            PreparedStatement pstmt = connectDB.prepareStatement(connectionQuery);
+
+                                            while (quantity_2 > 0) {
+                                                pstmt.executeUpdate(connectionQuery);
+                                                quantity_2--;
+                                            }
+                                            checkout.close();
+                                            booking.close();
+
+                                        } catch (Exception ex) {
+                                            throw new RuntimeException(ex);
+                                        }
+                                    }
+                                });
+
+                                checkoutLoaderController.cancelButton.setOnAction(event2 -> {
+                                    checkout.close();
+                                });
                             }
-                        });
+                        }
+                        else if(departuresController.seat_type.getValue() == null) {
+                            departuresController.error_label.setText("Please Select a Seat Type");
+                            departuresController.submitButton.setDisable(true);
 
-                        checkoutLoaderController.cancelButton.setOnAction(event2 -> {
-                            checkout.close();
-                        });
+                        }
+                        else if(!(departuresController.quantity_choice.getValue() >= 1) ) {
+                            departuresController.error_label.setText("Please Enter a Valid Number of Seats");
+                            departuresController.submitButton.setDisable(true);
+
+                        }
 
                     });
 
@@ -253,8 +394,7 @@ public class departuresController {
 
                 btn2.setOnAction(e -> {
                     database.TerminalFlightList rowData = getTableView().getItems().get(getIndex());
-
-                    FXMLLoader loader = new FXMLLoader(main.class.getResource("flight_details.fxml"));
+                    FXMLLoader loader = new FXMLLoader(main.class.getResource("/com/example/airport_management/flight_details.fxml"));
 
                     Parent root = null;
                     try {
@@ -282,6 +422,11 @@ public class departuresController {
                 if (empty) {
                     setGraphic(null);
                 } else {
+                    database.TerminalFlightList rowData = getTableView().getItems().get(getIndex());
+                    if(rowData.getStatus().equals("Departed")) {
+                        btn1.setDisable(true);
+                    }
+
                     setGraphic(box);
                 }
             }
@@ -294,31 +439,31 @@ public class departuresController {
                 new PropertyValueFactory<database.TerminalFlightList, ImageView>("airlineLogo"));
         airlineLogo_t2.getStyleClass().add("table_column");
 
-        TableColumn flightNumber_t2 = new TableColumn("Number");
-        flightNumber_t2.setMaxWidth(100);
+        TableColumn flightNumber_t2 = new TableColumn("Flight No");
+        flightNumber_t2.setPrefWidth(130);
         flightNumber_t2.setCellValueFactory(
                 new PropertyValueFactory<database.TerminalFlightList, String>("flightNumber"));
         flightNumber_t2.getStyleClass().add("table_column");
 
-        TableColumn destination_t2 = new TableColumn("destination");
+        TableColumn destination_t2 = new TableColumn("Destination");
         destination_t2.setMinWidth(160);
         destination_t2.setCellValueFactory(
                 new PropertyValueFactory<database.TerminalFlightList, String>("destination"));
         destination_t2.getStyleClass().add("table_column");
 
-        TableColumn departureTime_t2 = new TableColumn("departureTime");
+        TableColumn departureTime_t2 = new TableColumn("Departure");
         departureTime_t2.setMinWidth(117.14);
         departureTime_t2.setCellValueFactory(
                 new PropertyValueFactory<database.TerminalFlightList, Label>("departureTime"));
         departureTime_t2.getStyleClass().add("table_column");
 
-        TableColumn gate_t2 = new TableColumn("gate");
+        TableColumn gate_t2 = new TableColumn("Gate");
         gate_t2.setMinWidth(50);
         gate_t2.setCellValueFactory(
                 new PropertyValueFactory<database.TerminalFlightList, String>("gate"));
         gate_t2.getStyleClass().add("table_column");
 
-        TableColumn status_t2 = new TableColumn("status");
+        TableColumn status_t2 = new TableColumn("Status");
         status_t2.setMinWidth(117.14);
         status_t2.setCellValueFactory(
                 new PropertyValueFactory<database.TerminalFlightList, String>("status"));
@@ -326,7 +471,8 @@ public class departuresController {
 
 
         TableColumn<database.TerminalFlightList, Void> Actions_t2 = new TableColumn("Actions");
-        Actions_t2.setMinWidth(221);
+        Actions_t2.setMinWidth(219);
+
 
         Actions_t2.setCellFactory(col -> new TableCell<>() {
             private final Button btn1 = new Button("Book");
@@ -338,26 +484,36 @@ public class departuresController {
                     btn1.setManaged(false);
                     HBox.setMargin(btn2, new Insets(0, 0, 0, 75));
                 }
+
+
                 btn1.getStyleClass().add("button_database");
-                ImageView book = new ImageView(main.class.getResource("static/book.png").toExternalForm());
+                ImageView book = new ImageView(main.class.getResource("/com/example/airport_management/static/book.png").toExternalForm());
                 book.setFitHeight(14);
                 book.setFitWidth(14);
                 btn1.setGraphic(new HBox(book));
 
                 btn2.getStyleClass().add("button_database");
-                ImageView Info = new ImageView(main.class.getResource("static/details.png").toExternalForm());
+                ImageView Info = new ImageView(main.class.getResource("/com/example/airport_management/static/details.png").toExternalForm());
                 Info.setFitHeight(14);
                 Info.setFitWidth(14);
                 btn2.setGraphic(new HBox(Info));
 
                 HBox.setMargin(btn1, new Insets(0, 0, 0, 45));
 
+
+                if(getTableView().getItems().get(getIndex()).getStatus().equals("Departed")) {
+                    btn1.setDisable(true);
+                }
+
+
                 btn1.setOnAction(e -> {
                     database.TerminalFlightList rowData = getTableView().getItems().get(getIndex());
+
+
                     Stage stage = (Stage) root.getScene().getWindow();
 
                     Stage booking = new Stage();
-                    FXMLLoader bookingLoader = new FXMLLoader(main.class.getResource("booking.fxml"));
+                    FXMLLoader bookingLoader = new FXMLLoader(main.class.getResource("/com/example/airport_management/booking.fxml"));
                     Parent bookingRoot = null;
 
                     try {
@@ -367,6 +523,7 @@ public class departuresController {
                     }
 
                     departuresController departuresController = bookingLoader.getController();
+
 
 
                     booking.setScene(new Scene(bookingRoot));
@@ -399,7 +556,7 @@ public class departuresController {
                         String net = departuresController.net_total.getText();
 
                         Stage checkout = new Stage();
-                        FXMLLoader checkoutLoader = new FXMLLoader(main.class.getResource("checkout.fxml"));
+                        FXMLLoader checkoutLoader = new FXMLLoader(main.class.getResource("/com/example/airport_management/checkout.fxml"));
                         Parent checkoutRoot = null;
 
                         try {
@@ -479,7 +636,7 @@ public class departuresController {
                 btn2.setOnAction(e -> {
                     database.TerminalFlightList rowData = getTableView().getItems().get(getIndex());
 
-                    FXMLLoader loader = new FXMLLoader(main.class.getResource("flight_details.fxml"));
+                    FXMLLoader loader = new FXMLLoader(main.class.getResource("com/example/airport_management/flight_details.fxml"));
 
                     Parent root = null;
                     try {
@@ -507,8 +664,13 @@ public class departuresController {
                 if (empty) {
                     setGraphic(null);
                 } else {
+                    database.TerminalFlightList rowData = getTableView().getItems().get(getIndex());
+                    if(rowData.getStatus().equals("Departed")) {
+                        btn1.setDisable(true);
+                    }
                     setGraphic(box);
                 }
+
             }
         });
 
@@ -520,26 +682,23 @@ public class departuresController {
 
         String connectionQuery_t1 =
                 "SELECT AIRLINE.AirlineID, JOURNEY.FlightNumber, FLIGHT.Destination, JOURNEY.DepartureDateTime, " +
-                "JOURNEY.DelayedDateTime, PLANE.PlaneID, JOURNEY.DepartureGate, JOURNEY.JourneyID, " +
-                "TIMESTAMPDIFF(HOUR, NOW(), JOURNEY.DepartureDateTime) AS HOURDIFF " +
+                "JOURNEY.DelayedDateTime, PLANE.PlaneID, JOURNEY.DepartureGate, JOURNEY.JourneyID " +
                 "FROM JOURNEY " +
                 "INNER JOIN FLIGHT ON JOURNEY.FlightNumber = FLIGHT.FlightNumber " +
                 "INNER JOIN AIRLINE ON FLIGHT.AirlineID = AIRLINE.AirlineID " +
                 "INNER JOIN PLANE ON PLANE.PlaneID = JOURNEY.PlaneID " +
-                "WHERE DATE(JOURNEY.DepartureDateTime) = CURDATE() " +
-                "AND TIMESTAMPDIFF(HOUR, NOW(), JOURNEY.DepartureDateTime) < 13 " +
+                "WHERE TIMESTAMPDIFF(HOUR, JOURNEY.DepartureDateTime, NOW()) < 13 " +
                 "AND (JOURNEY.DepartureGate LIKE 'C%' OR JOURNEY.DepartureGate LIKE 'G%' OR JOURNEY.DepartureGate LIKE 'H%' OR JOURNEY.DepartureGate LIKE 'B%' OR JOURNEY.DepartureGate LIKE 'A%');";
+
         String connectionQuery_t2 =
                 "SELECT AIRLINE.AirlineID, JOURNEY.FlightNumber, FLIGHT.Destination, JOURNEY.DepartureDateTime, " +
-                        "JOURNEY.DelayedDateTime, PLANE.PlaneID, JOURNEY.DepartureGate, JOURNEY.JourneyID, " +
-                        "TIMESTAMPDIFF(HOUR, NOW(), JOURNEY.DepartureDateTime) AS HOURDIFF " +
-                        "FROM JOURNEY " +
-                        "INNER JOIN FLIGHT ON JOURNEY.FlightNumber = FLIGHT.FlightNumber " +
-                        "INNER JOIN AIRLINE ON FLIGHT.AirlineID = AIRLINE.AirlineID " +
-                        "INNER JOIN PLANE ON PLANE.PlaneID = JOURNEY.PlaneID " +
-                        "WHERE DATE(JOURNEY.DepartureDateTime) = CURDATE() " +
-                        "AND TIMESTAMPDIFF(HOUR, NOW(), JOURNEY.DepartureDateTime) < 13 " +
-                        "AND (JOURNEY.DepartureGate LIKE 'P%' OR JOURNEY.DepartureGate LIKE 'J%' OR JOURNEY.DepartureGate LIKE 'K%') OR JOURNEY.DepartureGate LIKE 'L%' OR JOURNEY.DepartureGate LIKE 'Q%';";
+                "JOURNEY.DelayedDateTime, PLANE.PlaneID, JOURNEY.DepartureGate, JOURNEY.JourneyID " +
+                "FROM JOURNEY " +
+                "INNER JOIN FLIGHT ON JOURNEY.FlightNumber = FLIGHT.FlightNumber " +
+                "INNER JOIN AIRLINE ON FLIGHT.AirlineID = AIRLINE.AirlineID " +
+                "INNER JOIN PLANE ON PLANE.PlaneID = JOURNEY.PlaneID " +
+                "WHERE TIMESTAMPDIFF(HOUR, JOURNEY.DepartureDateTime, NOW()) < 13 " +
+                "AND (JOURNEY.DepartureGate LIKE 'P%' OR JOURNEY.DepartureGate LIKE 'J%' OR JOURNEY.DepartureGate LIKE 'K%' OR JOURNEY.DepartureGate LIKE 'L%' OR JOURNEY.DepartureGate LIKE 'Q%');";
 
         try {
             Statement statement_1 = connectDB.createStatement();
@@ -549,27 +708,26 @@ public class departuresController {
                 int AirlineID = queryOutput.getInt("AirlineID");
 
                 ImageView airlinelogo = new ImageView();
-                switch(AirlineID) {
-                    case 1:
-                        airlinelogo.setImage(new Image(main.class.getResource("static/airasia.png").toExternalForm()));
-                        break;
+                String image_address = airlineLogo.get_logo(AirlineID);
 
-                    case 2:
-                        airlinelogo.setImage(new Image(main.class.getResource("static/malaysia_airlines.png").toExternalForm()));
-                        break;
-                }
+                airlinelogo.setImage(new Image(main.class.getResource(image_address).toExternalForm()));
+
                 airlinelogo.setFitWidth(30);
                 airlinelogo.setFitHeight(30);
 
                 String departure;
                 if(queryOutput.getString("DelayedDateTime") != null) {
-                    departure = queryOutput.getString("DelayedDateTime").substring(11, 16);
+                    departure = queryOutput.getString("DelayedDateTime");
                 }
 
                 else {
-                    departure = queryOutput.getString("DepartureDateTime").substring(11, 16);
+                    departure = queryOutput.getString("DepartureDateTime");
                 }
 
+                flightStatus flightStatus = new flightStatus();
+                String status = flightStatus.getStatus(departure);
+
+                departure = departure.substring(11, 16);
 
 
                 flights_t1.add(new database.TerminalFlightList(
@@ -578,7 +736,7 @@ public class departuresController {
                         new SimpleStringProperty(departure),
                         airlinelogo,
                         new SimpleStringProperty(queryOutput.getString("Destination")),
-                        new SimpleStringProperty(departure),
+                        new SimpleStringProperty(status),
                         new SimpleStringProperty(queryOutput.getString("DepartureGate")),
                         new SimpleIntegerProperty(queryOutput.getInt("JourneyID"))
                 ));
@@ -594,28 +752,25 @@ public class departuresController {
                 int AirlineID = queryOutput.getInt("AirlineID");
 
                 ImageView airlinelogo = new ImageView();
-                switch(AirlineID) {
-                    case 1:
-                        airlinelogo.setImage(new Image(main.class.getResource("static/airasia.png").toExternalForm()));
-                        break;
+                String image_address = airlineLogo.get_logo(AirlineID);
+                airlinelogo.setImage(new Image(main.class.getResource(image_address).toExternalForm()));
 
-                    case 2:
-                        airlinelogo.setImage(new Image(main.class.getResource("static/malaysia_airlines.png").toExternalForm()));
-                        break;
-                }
                 airlinelogo.setFitWidth(30);
                 airlinelogo.setFitHeight(30);
 
                 String departure;
                 if(queryOutput.getString("DelayedDateTime") != null) {
-                    departure = queryOutput.getString("DelayedDateTime").substring(11, 16);
+                    departure = queryOutput.getString("DelayedDateTime");
                 }
 
                 else {
-                    departure = queryOutput.getString("DepartureDateTime").substring(11, 16);
+                    departure = queryOutput.getString("DepartureDateTime");
                 }
 
+                flightStatus flightStatus = new flightStatus();
+                String status = flightStatus.getStatus(departure);
 
+                departure = departure.substring(11, 16);
 
                 flights_t2.add(new database.TerminalFlightList(
                         new SimpleStringProperty(queryOutput.getString("FlightNumber")),
@@ -623,7 +778,7 @@ public class departuresController {
                         new SimpleStringProperty(departure),
                         airlinelogo,
                         new SimpleStringProperty(queryOutput.getString("Destination")),
-                        new SimpleStringProperty(departure),
+                        new SimpleStringProperty(status),
                         new SimpleStringProperty(queryOutput.getString("DepartureGate")),
                         new SimpleIntegerProperty(queryOutput.getInt("JourneyID"))
                 ));
@@ -641,14 +796,16 @@ public class departuresController {
         terminal1_table.setItems(flights_t1);
         terminal1_table.getColumns().addAll(airlineLogo_t1, flightNumber_t1, destination_t1, departureTime_t1, gate_t1, status_t1, Actions_t1);
 
+
         terminal2_table.getColumns().addAll(airlineLogo_t2, flightNumber_t2, destination_t2, departureTime_t2, gate_t2, status_t2, Actions_t2);
         terminal2_table.setItems(flights_t2);
+
     }
 
 
     @FXML
     void order_history(ActionEvent event) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("order_history.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airport_management/order_history.fxml"));
         Parent root = loader.load();
 
         departuresController controller = loader.getController();
@@ -764,7 +921,7 @@ public class departuresController {
 
     @FXML
     void back(ActionEvent event) throws Exception {
-        FXMLLoader loader = new FXMLLoader(main.class.getResource("terminals_page.fxml"));
+        FXMLLoader loader = new FXMLLoader(main.class.getResource("/com/example/airport_management/terminals_page.fxml"));
 
         Parent root = loader.load();
         Scene scene = new Scene(root);
