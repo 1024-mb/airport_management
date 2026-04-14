@@ -36,45 +36,45 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.example.airport_management.controller.databaseController.validation.*;
 
 public class databaseController {
-    @FXML private TableView<database.Plane> planeTableView;
-    @FXML private TableView<database.Flight> flightTableView;
-    @FXML private TableView<database.Airline> airlineTableView;
-    @FXML private TableView<database.Journey> journeyTableView;
+    @FXML public TableView<database.Plane> planeTableView;
+    @FXML public TableView<database.Flight> flightTableView;
+    @FXML public TableView<database.Airline> airlineTableView;
+    @FXML public TableView<database.Journey> journeyTableView;
 
-    @FXML private Button insertButton;
-    @FXML private VBox root;
-    @FXML private Label database_name;
+    @FXML public Button insertButton;
+    @FXML public VBox root;
+    @FXML public Label database_name;
 
-    @FXML private Button submitButton;
-    @FXML private Button cancelButton;
+    @FXML public Button submitButton;
+    @FXML public Button cancelButton;
 
-    @FXML private TextField Flight_AirlineID;
-    @FXML private TextField Flight_Origin;
-    @FXML private TextField Flight_Destination;
-    @FXML private TextField Flight_Duration;
-    @FXML private TextField Flight_FlightNumber;
+    @FXML public TextField Flight_AirlineID;
+    @FXML public TextField Flight_Origin;
+    @FXML public TextField Flight_Destination;
+    @FXML public TextField Flight_Duration;
+    @FXML public TextField Flight_FlightNumber;
 
-    @FXML private TextField Journey_DepartureDateTime;
-    @FXML private TextField Journey_DelayedDateTime;
-    @FXML private TextField Journey_DepartureGate;
-    @FXML private TextField Journey_PlaneID;
-    @FXML private TextField Journey_FlightNumber;
+    @FXML public TextField Journey_DepartureDateTime;
+    @FXML public TextField Journey_DelayedDateTime;
+    @FXML public TextField Journey_DepartureGate;
+    @FXML public TextField Journey_PlaneID;
+    @FXML public TextField Journey_FlightNumber;
 
-    @FXML private Button yesButtonConfirm;
-    @FXML private Button noButtonConfirm;
+    @FXML public Button yesButtonConfirm;
+    @FXML public Button noButtonConfirm;
 
-    @FXML private Label error_message;
-    @FXML private Label error_msg;
+    @FXML public Label error_message;
+    @FXML public Label error_msg;
 
 
-    @FXML private TextField Plane_PlaneLayout;
-    @FXML private TextField Plane_Manufacturer;
-    @FXML private TextField Plane_Passengers;
-    @FXML private TextField Plane_Model;
-    @FXML private TextField Plane_FlightAttendants;
-    @FXML private Button OKButton;
+    @FXML public TextField Plane_PlaneLayout;
+    @FXML public TextField Plane_Manufacturer;
+    @FXML public TextField Plane_Passengers;
+    @FXML public TextField Plane_Model;
+    @FXML public TextField Plane_FlightAttendants;
+    @FXML public Button OKButton;
 
-    @FXML private TextField Airline_AirlineName;
+    @FXML public TextField Airline_AirlineName;
 
     ObservableList<database.Plane> planeList;
     ObservableList<database.Flight> flightList;
@@ -119,8 +119,6 @@ public class databaseController {
 
     }
 
-
-
     static void show_error_stage(Stage popupStage, String error_message) {
         Stage errorStage = new Stage();
         FXMLLoader errorLoader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/validationPopup.fxml"));
@@ -142,7 +140,7 @@ public class databaseController {
     }
 
 
-    void add_columns_plane() throws Exception {
+    public void add_columns_plane() throws Exception {
         planeTableView.setEditable(false);
 
         TableColumn PlaneID = new TableColumn("PlaneID");
@@ -150,7 +148,6 @@ public class databaseController {
         PlaneID.getStyleClass().add("table_column");
 
         TableColumn Manufacturer = new TableColumn("Manufacturer");
-
         Manufacturer.setCellValueFactory(new PropertyValueFactory<database.Plane, String>("Manufacturer"));
         Manufacturer.getStyleClass().add("table_column");
 
@@ -174,130 +171,125 @@ public class databaseController {
         TableColumn<database.Plane, Void> Actions = new TableColumn("Actions");
         Actions.setMinWidth(120);
 
-        //button.setGraphic();
-        //button.setStyle();
-        //ImageView edit = new ImageView(main.class.getResource("/com/example/airport_management/staticedit.png").toExternalForm());
-        //edit.setFitHeight(20);
-        //edit.setFitWidth(20);
 
         Actions.setCellFactory(col -> new TableCell<>() {
-             private final Button btn1 = new Button("Edit");
-             private final Button btn2 = new Button("Delete");
-             private final HBox box = new HBox(10, btn1, btn2);
+            private final Button btn1 = new Button("Edit");
+            private final Button btn2 = new Button("Delete");
+            private final HBox box = new HBox(10, btn1, btn2);
 
-             {
-                 btn1.getStyleClass().add("button_database");
-                 ImageView edit = new ImageView(main.class.getResource("/com/example/airport_management/static/edit.png").toExternalForm());
-                 edit.setFitHeight(12);
-                 edit.setFitWidth(12);
-                 btn1.setGraphic(new HBox(edit));
+            {
+                btn1.getStyleClass().add("button_database");
+                ImageView edit = new ImageView(main.class.getResource("/com/example/airport_management/static/edit.png").toExternalForm());
+                edit.setFitHeight(12);
+                edit.setFitWidth(12);
+                btn1.setGraphic(new HBox(edit));
 
-                 btn2.getStyleClass().add("button_database");
-                 ImageView delete = new ImageView(main.class.getResource("/com/example/airport_management/static/delete.png").toExternalForm());
-                 delete.setFitHeight(12);
-                 delete.setFitWidth(12);
-                 btn2.setGraphic(new HBox(delete));
+                btn2.getStyleClass().add("button_database");
+                ImageView delete = new ImageView(main.class.getResource("/com/example/airport_management/static/delete.png").toExternalForm());
+                delete.setFitHeight(12);
+                delete.setFitWidth(12);
+                btn2.setGraphic(new HBox(delete));
 
-                 setAlignment(Pos.CENTER);
+                setAlignment(Pos.CENTER);
 
-                 btn1.setOnAction(e -> {
-                     database.Plane rowData = getTableView().getItems().get(getIndex());
-                     Stage stage = (Stage) root.getScene().getWindow();
+                btn1.setOnAction(e -> {
+                    database.Plane rowData = getTableView().getItems().get(getIndex());
+                    Stage stage = (Stage) root.getScene().getWindow();
 
-                     Stage popupStage = new Stage();
-                     FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("/com/example/airport_management/popup_plane.fxml"));
-                     Parent root = null;
+                    Stage popupStage = new Stage();
+                    FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("/com/example/airport_management/popup_plane.fxml"));
+                    Parent root = null;
 
-                     try {
-                         root = fxmlLoader.load();
-                     } catch (IOException ex) {
-                         throw new RuntimeException(ex);
-                     }
-                     databaseController controller = fxmlLoader.getController();
+                    try {
+                        root = fxmlLoader.load();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    databaseController controller = fxmlLoader.getController();
 
-                     popupStage.setScene(new Scene(root));
-                     popupStage.initOwner(stage);
-                     popupStage.show();
+                    popupStage.setScene(new Scene(root));
+                    popupStage.initOwner(stage);
+                    popupStage.show();
 
-                     controller.Plane_PlaneLayout.setText(rowData.getPlaneLayout());
-                     controller.Plane_Manufacturer.setText(rowData.getManufacturer());
-                     controller.Plane_Model.setText(rowData.getModel());
-                     controller.Plane_Passengers.setText(String.valueOf(rowData.getPassengers()));
-                     controller.Plane_FlightAttendants.setText(String.valueOf(rowData.getFlightAttendants()));
+                    controller.Plane_PlaneLayout.setText(rowData.getPlaneLayout());
+                    controller.Plane_Manufacturer.setText(rowData.getManufacturer());
+                    controller.Plane_Model.setText(rowData.getModel());
+                    controller.Plane_Passengers.setText(String.valueOf(rowData.getPassengers()));
+                    controller.Plane_FlightAttendants.setText(String.valueOf(rowData.getFlightAttendants()));
 
-                     validation validation = new validation();
-                     validation.live_validation_plane(controller);
+                    validation validation = new validation();
+                    validation.live_validation_plane(controller);
 
-                     controller.submitButton.setOnAction(e2 -> {
-                         if(validate_data_plane(controller, popupStage) == true) {
-                             String connectionQuery = "UPDATE PLANE SET PlaneLayout=\"" + controller.Plane_PlaneLayout.getText() +
-                                     "\", Manufacturer=\"" + controller.Plane_Manufacturer.getText()
-                                     + "\"" + ", Model=\"" + controller.Plane_Model.getText() + "\"," +
-                                     "Passengers=" + controller.Plane_Passengers.getText() +
-                                     ", FlightAttendants=" + controller.Plane_FlightAttendants.getText() +
-                                     " WHERE PlaneID=" + rowData.getPlaneID();
+                    controller.submitButton.setOnAction(e2 -> {
+                        if(validate_data_plane(controller, popupStage) == true) {
+                            String connectionQuery = "UPDATE PLANE SET PlaneLayout=\"" + controller.Plane_PlaneLayout.getText() +
+                                    "\", Manufacturer=\"" + controller.Plane_Manufacturer.getText()
+                                    + "\"" + ", Model=\"" + controller.Plane_Model.getText() + "\"," +
+                                    "Passengers=" + controller.Plane_Passengers.getText() +
+                                    ", FlightAttendants=" + controller.Plane_FlightAttendants.getText() +
+                                    " WHERE PlaneID=" + rowData.getPlaneID();
 
-                             Connection connectDB = null;
-                             try {
-                                 connectDB = DatabaseConnection.connect();
-                                 PreparedStatement pstmt = connectDB.prepareStatement(connectionQuery);
-                                 pstmt.executeUpdate(connectionQuery);
-                                 popupStage.close();
+                            Connection connectDB = null;
+                            try {
+                                connectDB = DatabaseConnection.connect();
+                                PreparedStatement pstmt = connectDB.prepareStatement(connectionQuery);
+                                pstmt.executeUpdate(connectionQuery);
+                                popupStage.close();
 
-                             } catch (Exception ex) {
-                                 throw new RuntimeException(ex);
-                             }
-                             try {
-                                 btn2.setDisable(true);
-                                 btn1.setDisable(true);
-                                 refresh_plane();
-                                 btn2.setDisable(false);
-                                 btn1.setDisable(false);
-                             } catch (Exception ex2) {
-                                 throw new RuntimeException(ex2);
-                             }
-                         }
-                     });
-                     controller.cancelButton.setOnAction(e3 -> {popupStage.close();});
-                 });
-                 btn2.setOnAction(e -> {
-                     database.Plane rowData = getTableView().getItems().get(getIndex());
-                     boolean return_value = confirm_delete();
+                            } catch (Exception ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            try {
+                                btn2.setDisable(true);
+                                btn1.setDisable(true);
+                                refresh_plane();
+                                btn2.setDisable(false);
+                                btn1.setDisable(false);
+                            } catch (Exception ex2) {
+                                throw new RuntimeException(ex2);
+                            }
+                        }
+                    });
+                    controller.cancelButton.setOnAction(e3 -> {popupStage.close();});
+                });
+                btn2.setOnAction(e -> {
+                    database.Plane rowData = getTableView().getItems().get(getIndex());
+                    boolean return_value = confirm_delete();
 
-                     Connection connectDB = null;
+                    Connection connectDB = null;
 
-                     if(return_value==true) {
-                         try {
-                             try {
-                                 connectDB = DatabaseConnection.connect();
-                                 String connectionQuery = "DELETE FROM PLANE WHERE PlaneID=" + rowData.getPlaneID() + ";";
-                                 PreparedStatement pstmt = connectDB.prepareStatement(connectionQuery);
-                                 pstmt.executeUpdate(connectionQuery);
+                    if(return_value==true) {
+                        try {
+                            try {
+                                connectDB = DatabaseConnection.connect();
+                                String connectionQuery = "DELETE FROM PLANE WHERE PlaneID=" + rowData.getPlaneID() + ";";
+                                PreparedStatement pstmt = connectDB.prepareStatement(connectionQuery);
+                                pstmt.executeUpdate(connectionQuery);
 
-                             } catch (Exception ex) {
-                                 throw new RuntimeException(ex);
-                             }
-                             btn2.setDisable(true);
-                             btn1.setDisable(true);
-                             refresh_plane();
-                             btn2.setDisable(false);
-                             btn1.setDisable(false);
-                         } catch (Exception ex) {
-                             throw new RuntimeException(ex);
-                         }
-                     }
+                            } catch (Exception ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            btn2.setDisable(true);
+                            btn1.setDisable(true);
+                            refresh_plane();
+                            btn2.setDisable(false);
+                            btn1.setDisable(false);
+                        } catch (Exception ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
 
-                 });
-             }
-             @Override
-             protected void updateItem(Void item, boolean empty) {
-                 super.updateItem(item, empty);
-                 if (empty) {
-                     setGraphic(null);
-                 } else {
-                     setGraphic(box);
-                 }
-             }
+                });
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(box);
+                }
+            }
         });
 
         Connection connectDB = DatabaseConnection.connect();
@@ -316,7 +308,7 @@ public class databaseController {
                         new SimpleIntegerProperty(queryOutput.getInt("FlightAttendants")),
                         new SimpleIntegerProperty(queryOutput.getInt("Passengers")),
                         new SimpleStringProperty(queryOutput.getString("PlaneLayout"))
-                        ));
+                ));
             }
 
         } catch (Exception e) {
@@ -371,8 +363,6 @@ public class databaseController {
         stage.show();
     }
 
-
-
     public void insertData() {
         Stage stage = (Stage) root.getScene().getWindow();
 
@@ -385,7 +375,6 @@ public class databaseController {
 
         switch(database_name.getText()){
             case "PLANE":
-
                 fxmlLoader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/popup_plane.fxml"));
                 try {
                     root = fxmlLoader.load();
@@ -649,8 +638,8 @@ public class databaseController {
         journeyTableView.setItems(journeyList);
     }
 
-    void add_columns_flight() throws Exception {
-        flightTableView.setEditable(true);
+    public void add_columns_flight() throws Exception {
+        flightTableView.setEditable(false);
 
         TableColumn FlightNumber = new TableColumn("FlightNumber");
         FlightNumber.setCellValueFactory(new PropertyValueFactory<database.Flight, String>("FlightNumber"));
@@ -830,8 +819,8 @@ public class databaseController {
         flightTableView.getColumns().addAll(FlightNumber, Origin, Destination, Duration, Actions);
 
     }
-    void add_columns_airline() throws Exception {
-        airlineTableView.setEditable(true);
+    public void add_columns_airline() throws Exception {
+        airlineTableView.setEditable(false);
 
         TableColumn AirlineID = new TableColumn("AirlineID");
         AirlineID.setMinWidth(50);
@@ -980,8 +969,8 @@ public class databaseController {
     }
 
 
-    void add_columns_journey() throws Exception {
-        journeyTableView.setEditable(true);
+    public void add_columns_journey() throws Exception {
+        journeyTableView.setEditable(false);
 
         TableColumn JourneyID = new TableColumn("JourneyID");
         JourneyID.setMinWidth(50);
@@ -1194,7 +1183,7 @@ public class databaseController {
     }
 
     public class validation {
-        static void live_validation_flight(databaseController controller) {
+        public static void live_validation_flight(databaseController controller) {
             controller.Flight_Duration.textProperty().addListener((observable, oldValue, newValue) -> {
                 controller.submitButton.setDisable(false);
                 controller.error_msg.setText("");
@@ -1225,7 +1214,7 @@ public class databaseController {
                 catch(Exception exc) {controller.error_msg.setText("Invalid AirlineID"); controller.submitButton.setDisable(true);}
             });
         }
-        static void live_validation_journey(databaseController controller) {
+        public static void live_validation_journey(databaseController controller) {
 
             controller.Journey_DepartureGate.textProperty().addListener(
                     (observable, oldValue, newValue) -> {
@@ -1278,7 +1267,7 @@ public class databaseController {
                 }
             });
         }
-        static void live_validation_airline(databaseController controller) {
+        public static void live_validation_airline(databaseController controller) {
             controller.Airline_AirlineName.textProperty().addListener((observable, oldValue, newValue) -> {
                 controller.submitButton.setDisable(false);
                 controller.error_msg.setText("");
@@ -1290,7 +1279,7 @@ public class databaseController {
 
             });
         }
-        static void live_validation_plane(databaseController controller) {
+        public static void live_validation_plane(databaseController controller) {
 
             controller.Plane_FlightAttendants.textProperty().addListener((observable, oldValue, newValue) -> {
                 controller.submitButton.setDisable(false);
@@ -1314,7 +1303,7 @@ public class databaseController {
             });
 
         }
-        static boolean validate_data_airline(databaseController controller, Stage popupStage) {
+        public static boolean validate_data_airline(databaseController controller, Stage popupStage) {
             if(!controller.Airline_AirlineName.getText().isEmpty()) {
                 if(controller.Airline_AirlineName.getText().matches("[a-zA-Z ]+")) {
                     return true;
@@ -1340,7 +1329,7 @@ public class databaseController {
                     int passengers = Integer.parseInt(controller.Plane_Passengers.getText());
                     int attendants = Integer.parseInt(controller.Plane_FlightAttendants.getText());
 
-                    if (passengers <= 0 || attendants <= 0 || passengers > 300 || attendants > 20) {
+                    if (passengers <= 0 || attendants <= 0 || passengers > 900 || attendants > 20) {
                         error_message = "Abnormal Number Values (Passengers/Attendants)";
                     }
 

@@ -36,33 +36,34 @@ import static com.example.airport_management.utilities.calculateTotal.befTaxTot;
 
 
 public class departuresController {
-    @FXML private TableView<database.TerminalFlightList> terminal1_table;
-    @FXML private TableView<database.TerminalFlightList> terminal2_table;
-    @FXML private AnchorPane root;
-    @FXML private Spinner<Integer> quantity_choice;
-    @FXML private ChoiceBox<String> seat_type;
-    @FXML private Button submitButton;
-    @FXML private Button cancelButton;
+    @FXML public TableView<database.TerminalFlightList> terminal1_table;
+    @FXML public TableView<database.TerminalFlightList> terminal2_table;
+    @FXML public AnchorPane root;
+    @FXML public Spinner<Integer> quantity_choice;
+    @FXML public ChoiceBox<String> seat_type;
+    @FXML public Button submitButton;
+    @FXML public Button cancelButton;
 
-    @FXML private VBox flights;
-    @FXML private Button history_btn;
+    @FXML public VBox flights;
+    @FXML public Button history_btn;
+    @FXML public Button back;
 
-    @FXML private Label error_label;
-    @FXML private Label net_total;
-    @FXML private Label gross_total;
+    @FXML public Label error_label;
+    @FXML public Label net_total;
+    @FXML public Label gross_total;
 
-    @FXML private TextField cardNumber;
-    @FXML private TextField expiryMonth;
-    @FXML private TextField expiryYear;
+    @FXML public TextField cardNumber;
+    @FXML public TextField expiryMonth;
+    @FXML public TextField expiryYear;
 
-    @FXML private Label seat_type_label;
-    @FXML private Label quantity_label;
+    @FXML public Label seat_type_label;
+    @FXML public Label quantity_label;
 
 
     public void home(ActionEvent event) throws IOException {
         home.home(event);}
 
-    void add_columns_departures() throws Exception {
+    public void add_columns_departures() throws Exception {
         if(!Session.getInstance().isAuthenticated()) {
             history_btn.setDisable(true);
             history_btn.setVisible(false);
@@ -802,9 +803,8 @@ public class departuresController {
 
     }
 
-
     @FXML
-    void order_history(ActionEvent event) throws Exception {
+    public void order_history(ActionEvent event) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airport_management/order_history.fxml"));
         Parent root = loader.load();
 
@@ -920,7 +920,7 @@ public class departuresController {
     }
 
     @FXML
-    void back(ActionEvent event) throws Exception {
+    public void back(ActionEvent event) throws Exception {
         FXMLLoader loader = new FXMLLoader(main.class.getResource("/com/example/airport_management/terminals_page.fxml"));
 
         Parent root = loader.load();

@@ -10,9 +10,7 @@ public class DatabaseConnection {
         String user = "root";
         String password = System.getenv("mysqlpass");
 
-
         try {
-
             databaseLink = DriverManager.getConnection(url, user, password);
 
         } catch(Exception e) {

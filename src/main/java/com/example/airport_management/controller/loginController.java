@@ -24,16 +24,15 @@ import java.sql.*;
 
 
 public class loginController {
-    @FXML private Label login_arrow;
-    @FXML private TextField username_field;
-    @FXML private PasswordField password_field;
-    @FXML private TextField email_field;
-    @FXML private Button signup_button;
-
-    @FXML private Label error_label;
+    @FXML public Label login_arrow;
+    @FXML public TextField username_field;
+    @FXML public PasswordField password_field;
+    @FXML public TextField email_field;
+    @FXML public Button signup_button;
+    @FXML public Label error_label;
 
     @FXML
-    void initialize() {
+    public void initialize() {
         FadeTransition fade_login = new FadeTransition(Duration.seconds(2), login_arrow);
         fade_login.setFromValue(1.0);
         fade_login.setToValue(0.0);
@@ -54,15 +53,14 @@ public class loginController {
     }
 
     public boolean validate_password(String password) {
-        if(password.isEmpty() || password.length() < 10 || password.matches("[a-zA-Z ]*") || password.matches("[a-zA-Z0-9 ]*")) {
+        if(password.isEmpty() || password.length() < 10 || password.matches("[a-zA-Z ]*") || !password.matches("[0-9]") || password.matches("[a-zA-Z0-9 ]*")) {
             return false;
         }
         return true;
     }
 
     public boolean validate_username(String username) {
-        if(username.isEmpty() || username.contains(" ") || username.contains("/") || username.contains("\\")) {
-
+        if(username.isEmpty() || !username.matches("^[A-Za-z0-9._]+$")) {
             return false;
         }
         try {
@@ -107,7 +105,7 @@ public class loginController {
                 controller.error_label.setText("Error - Please Enter a Username");
 
             }
-            if(newValue.contains(" ") || newValue.contains("/") || newValue.contains("\\")) {
+            if(newValue.matches("^[A-Za-z0-9._]+$")) {
                 controller.signup_button.setDisable(true);
                 controller.error_label.setText("Error - Invalid Username");
 

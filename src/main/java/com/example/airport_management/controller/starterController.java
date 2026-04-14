@@ -27,15 +27,14 @@ import java.util.Set;
 
 public class starterController {
 
-    @FXML
-    private StackPane root;
-    @FXML private Label shopping_text;
-    @FXML private Label flight_text;
-    @FXML private Label welcomeLabel;
-    @FXML private Label db_label;
-    @FXML private Button login_button;
-    @FXML private Button database_button;
-    @FXML Label header_btn;
+    @FXML public StackPane root;
+    @FXML public Label shopping_text;
+    @FXML public Label flight_text;
+    @FXML public Label welcomeLabel;
+    @FXML public Label db_label;
+    @FXML public Button login_button;
+    @FXML public Button database_button;
+    @FXML public Label header_btn;
 
 
     public void database_entry(ActionEvent event) throws IOException {
@@ -120,10 +119,6 @@ public class starterController {
 
     }
 
-    @FXML
-    public void alternate_language() {
-
-    }
 
     public void shopping(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(main.class.getResource("/com/example/airport_management/shops_map.fxml"));

@@ -69,7 +69,7 @@
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <Button layoutX="32.0" layoutY="3.0" mnemonicParsing="false" onAction="#sales_summary" prefHeight="202.0" prefWidth="231.0" styleClass="button_global" text="REPORT">
+                  <Button fx:id="report" layoutX="32.0" layoutY="3.0" mnemonicParsing="false" onAction="#sales_summary" prefHeight="202.0" prefWidth="231.0" styleClass="button_global" text="REPORT">
                      <font>
                         <Font size="23.0" />
                      </font>

@@ -17,20 +17,20 @@ import java.sql.Statement;
 
 
 public class flightDetailController {
-    @FXML private ImageView planelayout;
-    @FXML private ImageView airlinelogo;
-    @FXML private Label journey;
-    @FXML private Label flightCode;
-    @FXML private Label departure;
-    @FXML private Label status;
-    @FXML private Label duration;
-    @FXML private Label manufacturer;
-    @FXML private Label model;
-    @FXML private Label passengers;
-    @FXML private Label flight_attendants;
+    @FXML public ImageView planelayout;
+    @FXML public ImageView airlinelogo;
+    @FXML public Label journey;
+    @FXML public Label flightCode;
+    @FXML public Label departure;
+    @FXML public Label status;
+    @FXML public Label duration;
+    @FXML public Label manufacturer;
+    @FXML public Label model;
+    @FXML public Label passengers;
+    @FXML public Label flight_attendants;
 
 
-    void add_details(Integer JourneyID) throws Exception {
+    public void add_details(Integer JourneyID) throws Exception {
         Connection connectDB = DatabaseConnection.connect();
 
         String connectionQuery =

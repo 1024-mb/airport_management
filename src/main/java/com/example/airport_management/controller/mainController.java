@@ -16,7 +16,7 @@ public class mainController {
     // called from within the main fxml page when the account icon is clicked
     @FXML
     public void loadLogin(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/comexample/airport_management/startPage.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/airport_management/startPage.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

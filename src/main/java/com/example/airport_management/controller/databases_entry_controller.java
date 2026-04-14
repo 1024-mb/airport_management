@@ -24,28 +24,33 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Set;
 
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+
+
 public class databases_entry_controller {
-    @FXML private AnchorPane root;
-    @FXML private VBox airlines;
-    @FXML private VBox tickets;
-    @FXML private VBox destinations;
+    @FXML public AnchorPane root;
+    @FXML public VBox airlines;
+    @FXML public VBox tickets;
+    @FXML public VBox destinations;
 
-    @FXML private LineChart sales_graph;
-    @FXML private CategoryAxis x;
-    @FXML private NumberAxis y;
+    @FXML public Button report;
 
-    @FXML private Label avgFlightTime;
-    @FXML private Label minFlightTime;
-    @FXML private Label maxFlightTime;
+    @FXML public LineChart sales_graph;
+    @FXML public CategoryAxis x;
+    @FXML public NumberAxis y;
 
-    @FXML private Label maxPassengers;
-    @FXML private Label avgPassengers;
-    @FXML private Label minPassengers;
+    @FXML public Label avgFlightTime;
+    @FXML public Label minFlightTime;
+    @FXML public Label maxFlightTime;
 
+    @FXML public Label maxPassengers;
+    @FXML public Label avgPassengers;
+    @FXML public Label minPassengers;
 
-    @FXML private PieChart topDestinations;
-    @FXML private PieChart topAirlines;
-    @FXML private PieChart topTickets;
+    @FXML public PieChart topDestinations;
+    @FXML public PieChart topAirlines;
+    @FXML public PieChart topTickets;
 
 
     //@FXML private Label getAvgFlightTime;

@@ -15,12 +15,17 @@ public class flightStatus {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalTime time_formatted = LocalTime.parse(time, formatter);
 
+        long minutes = Duration.between(now, time_formatted).toMinutes();
 
-        if(time_formatted.isBefore(now)) {out = "Departed";}
-        else if(Math.abs(Duration.between(time_formatted, now).toMinutes()) < 20) {out = "Final Call";}
-        else if(Math.abs(Duration.between(time_formatted, now).toMinutes()) <= 90) {out = "Boarding";}
-        else if(Math.abs(Duration.between(time_formatted, now).toMinutes()) <= 120) {out = "Gates Open";}
-
+        if (minutes < 0) {
+            out = "Departed";
+        } else if (minutes <= 20) {
+            out = "Final Call";
+        } else if (minutes <= 90) {
+            out = "Boarding";
+        } else if (minutes <= 120) {
+            out = "Gates Open";
+        }
         return out;
     }
 }
