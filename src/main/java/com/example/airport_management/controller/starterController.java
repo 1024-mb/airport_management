@@ -35,6 +35,8 @@ public class starterController {
     @FXML public Button login_button;
     @FXML public Button database_button;
     @FXML public Label header_btn;
+    @FXML public Button shopping_button;
+    @FXML public Button flight_button;
 
 
     public void database_entry(ActionEvent event) throws IOException {

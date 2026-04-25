@@ -65,10 +65,11 @@
                         <Font size="20.0" />
                      </font>
                   </Label>
-            <Hyperlink alignment="CENTER" contentDisplay="CENTER" layoutX="151.0" layoutY="389.0" onAction="#signup" prefHeight="30.0" prefWidth="499.0" text="Create Account" textFill="#3d405b">
+            <Hyperlink fx:id="signup_hyperlink" alignment="CENTER" contentDisplay="CENTER" layoutX="151.0" layoutY="389.0" onAction="#signup" prefHeight="30.0" prefWidth="499.0" text="Create Account" textFill="#3d405b">
                <font>
                   <Font size="17.0" />
-               </font></Hyperlink>
+               </font>
+            </Hyperlink>
             <Label fx:id="error_label" alignment="CENTER" contentDisplay="CENTER" layoutX="152.0" layoutY="153.0" prefHeight="17.0" prefWidth="496.0" textAlignment="CENTER" textFill="#9e2a2b">
                <font>
                   <Font size="15.0" />

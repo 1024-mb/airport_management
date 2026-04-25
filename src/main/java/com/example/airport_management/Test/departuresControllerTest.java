@@ -98,6 +98,12 @@ public class departuresControllerTest extends ApplicationTest {
     void test_back_does_not_throw() {
         assertDoesNotThrow(() -> controller.back.fire());
     }
+    
 
+    @Test
+    void history_does_not_throw() {
+        assertDoesNotThrow(() -> controller.history_btn.fire());
+
+    }
 
 }

@@ -17,8 +17,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.testfx.api.FxAssert.verifyThat;
+import static org.testfx.util.NodeQueryUtils.hasText;
 
 public class databaseControllerTest extends ApplicationTest {
 
@@ -67,6 +68,8 @@ public class databaseControllerTest extends ApplicationTest {
         stage.setScene(new Scene(controller.Flight_AirlineID));
         stage.show();
     }
+
+
 
     @Test
     void test_add_columns_flight() throws Exception {
@@ -186,6 +189,52 @@ public class databaseControllerTest extends ApplicationTest {
         // Ensure table is not editable
         Assertions.assertFalse(controller.airlineTableView.isEditable());
     }
+    @Test
+
+    void testRefreshFlight() throws Exception {
+        controller.add_columns_flight();
+        controller.refresh_flight();
+
+        assertNotNull(controller.flightTableView.getItems());
+        assertEquals(controller.flightList, controller.flightTableView.getItems());
+
+        // Optional: ensure data actually loaded
+        assertTrue(controller.flightList.size() >= 0);
+    }
+
+    @Test
+    void testRefreshPlane() throws Exception {
+        controller.add_columns_plane();
+        controller.refresh_plane();
+
+        assertNotNull(controller.planeTableView.getItems());
+        assertEquals(controller.planeList, controller.planeTableView.getItems());
+
+        assertTrue(controller.planeList.size() >= 0);
+    }
+
+    @Test
+    void testRefreshAirline() throws Exception {
+        controller.add_columns_airline();
+        controller.refresh_airline();
+
+        assertNotNull(controller.airlineTableView.getItems());
+        assertEquals(controller.airlineList, controller.airlineTableView.getItems());
+
+        assertTrue(controller.airlineList.size() >= 0);
+    }
+
+    @Test
+    void testRefreshJourney() throws Exception {
+        controller.add_columns_journey();
+        controller.refresh_journey();
+
+        assertNotNull(controller.journeyTableView.getItems());
+        assertEquals(controller.journeyList, controller.journeyTableView.getItems());
+
+        assertTrue(controller.journeyList.size() >= 0);
+    }
+
 
     @Test
     public void test_database_connection() {
@@ -197,5 +246,28 @@ public class databaseControllerTest extends ApplicationTest {
 
     }
 
-
+    @Test
+    void test_refresh_flight() {
+        assertDoesNotThrow(() -> {
+            controller.refresh_flight();
+        });
+    }
+    @Test
+    void test_refresh_plane() {
+        assertDoesNotThrow(() -> {
+            controller.refresh_plane();
+        });
+    }
+    @Test
+    void test_refresh_airline() {
+        assertDoesNotThrow(() -> {
+            controller.refresh_airline();
+        });
+    }
+    @Test
+    void test_refresh_journey() {
+        assertDoesNotThrow(() -> {
+            controller.refresh_journey();
+        });
+    }
 }

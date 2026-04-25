@@ -688,7 +688,7 @@ public class departuresController {
                 "INNER JOIN FLIGHT ON JOURNEY.FlightNumber = FLIGHT.FlightNumber " +
                 "INNER JOIN AIRLINE ON FLIGHT.AirlineID = AIRLINE.AirlineID " +
                 "INNER JOIN PLANE ON PLANE.PlaneID = JOURNEY.PlaneID " +
-                "WHERE TIMESTAMPDIFF(HOUR, JOURNEY.DepartureDateTime, NOW()) < 13 " +
+                "WHERE ABS(TIMESTAMPDIFF(HOUR, JOURNEY.DepartureDateTime, NOW())) < 13 " +
                 "AND (JOURNEY.DepartureGate LIKE 'C%' OR JOURNEY.DepartureGate LIKE 'G%' OR JOURNEY.DepartureGate LIKE 'H%' OR JOURNEY.DepartureGate LIKE 'B%' OR JOURNEY.DepartureGate LIKE 'A%');";
 
         String connectionQuery_t2 =
@@ -698,7 +698,7 @@ public class departuresController {
                 "INNER JOIN FLIGHT ON JOURNEY.FlightNumber = FLIGHT.FlightNumber " +
                 "INNER JOIN AIRLINE ON FLIGHT.AirlineID = AIRLINE.AirlineID " +
                 "INNER JOIN PLANE ON PLANE.PlaneID = JOURNEY.PlaneID " +
-                "WHERE TIMESTAMPDIFF(HOUR, JOURNEY.DepartureDateTime, NOW()) < 13 " +
+                "WHERE ABS(TIMESTAMPDIFF(HOUR, JOURNEY.DepartureDateTime, NOW())) < 13 " +
                 "AND (JOURNEY.DepartureGate LIKE 'P%' OR JOURNEY.DepartureGate LIKE 'J%' OR JOURNEY.DepartureGate LIKE 'K%' OR JOURNEY.DepartureGate LIKE 'L%' OR JOURNEY.DepartureGate LIKE 'Q%');";
 
         try {

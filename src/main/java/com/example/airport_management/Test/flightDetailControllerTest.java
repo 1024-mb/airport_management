@@ -2,6 +2,7 @@ package com.example.airport_management.Test;
 
 import com.example.airport_management.controller.flightDetailController;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -12,6 +13,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import java.sql.*;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.*;
 
 public class flightDetailControllerTest extends ApplicationTest {
@@ -31,6 +33,7 @@ public class flightDetailControllerTest extends ApplicationTest {
 
         controller.planelayout = new ImageView();
         controller.airlinelogo = new ImageView();
+        controller.back = new Button();
 
         controller.journey = new Label();
         controller.flightCode = new Label();
@@ -92,7 +95,6 @@ public class flightDetailControllerTest extends ApplicationTest {
 
     @Test
     void testAddDetails_populatesLabelsCorrectly() throws Exception {
-
         interact(() -> {
             try {
                 controller.add_details(2);
@@ -101,7 +103,6 @@ public class flightDetailControllerTest extends ApplicationTest {
             }
         });
 
-        // tests the output of the query and injection into the fxml vs the database values.
         Assertions.assertEquals("Kuala Lumpur International  →  Singapore Changi", controller.journey.getText());
         Assertions.assertEquals("Flight AK701", controller.flightCode.getText());
         Assertions.assertEquals("Manufacturer: Boeing", controller.manufacturer.getText());
@@ -124,5 +125,10 @@ public class flightDetailControllerTest extends ApplicationTest {
 
         // checks the time matches ---> delayed time is used instead of the departure time, if there is a delay
         Assertions.assertEquals("05:55", controller.departure.getText());
+    }
+
+    @Test
+    void test_back_does_not_throw() {
+        assertDoesNotThrow(() -> controller.back.fire());
     }
 }

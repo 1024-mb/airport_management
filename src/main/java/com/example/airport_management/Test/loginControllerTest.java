@@ -89,7 +89,7 @@ public class loginControllerTest  extends ApplicationTest {
     @Test
     void test_valid_username_format() {
         assertNotNull(controller.username_field);
-        // This only tests regex part, DB may interfere
+
         assertTrue(controller.validate_username("user_123"));
     }
 
@@ -126,6 +126,5 @@ public class loginControllerTest  extends ApplicationTest {
         });
 
     }
-
 
 }

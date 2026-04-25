@@ -30,6 +30,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -76,11 +81,13 @@ public class databaseController {
 
     @FXML public TextField Airline_AirlineName;
 
-    ObservableList<database.Plane> planeList;
-    ObservableList<database.Flight> flightList;
-    ObservableList<database.Airline> airlineList;
-    ObservableList<database.Journey> journeyList;
+    public ObservableList<database.Plane> planeList;
+    public ObservableList<database.Flight> flightList;
+    public ObservableList<database.Airline> airlineList;
+    public ObservableList<database.Journey> journeyList;
 
+
+    // all other methods call the methods that have tests for them.
     @FXML
     public void displayData(String tableType) throws Exception {
         Set<Node> tableViews = root.lookupAll(".table-view");
@@ -119,7 +126,8 @@ public class databaseController {
 
     }
 
-    static void show_error_stage(Stage popupStage, String error_message) {
+
+    public static void show_error_stage(Stage popupStage, String error_message) {
         Stage errorStage = new Stage();
         FXMLLoader errorLoader = new FXMLLoader(databaseController.class.getResource("/com/example/airport_management/validationPopup.fxml"));
 
@@ -267,7 +275,7 @@ public class databaseController {
                                 pstmt.executeUpdate(connectionQuery);
 
                             } catch (Exception ex) {
-                                throw new RuntimeException(ex);
+                                show_error_stage(new Stage(), "Cannot Delete This Item - Foreign Key Constraint Failed");
                             }
                             btn2.setDisable(true);
                             btn1.setDisable(true);
@@ -399,7 +407,6 @@ public class databaseController {
                 controller = fxmlLoader.getController();
                 live_validation_flight(controller);
 
-
                 break;
 
             case "AIRLINE":
@@ -525,8 +532,10 @@ public class databaseController {
         });
     }
 
-    void refresh_flight() {
-        flightList.clear();
+    public void refresh_flight() {
+        if(flightList != null) {
+            flightList.clear();
+        }
 
         String connectionQuery = "SELECT * from FLIGHT;";
         Connection connectDB = null;
@@ -553,9 +562,10 @@ public class databaseController {
 
         flightTableView.setItems(flightList);
     }
-    void refresh_plane() {
-        planeList.clear();
-
+    public void refresh_plane() {
+        if(planeList != null) {
+            planeList.clear();
+        }
         String connectionQuery = "SELECT * from PLANE;";
         Connection connectDB = null;
 
@@ -583,9 +593,10 @@ public class databaseController {
 
         planeTableView.setItems(planeList);
     }
-    void refresh_airline() {
-        airlineList.clear();
-
+    public void refresh_airline() {
+        if(airlineList != null ) {
+            airlineList.clear();
+        }
         String connectionQuery = "SELECT * from AIRLINE;";
         Connection connectDB = null;
 
@@ -608,8 +619,10 @@ public class databaseController {
 
         airlineTableView.setItems(airlineList);
     }
-    void refresh_journey() {
-        journeyList.clear();
+    public void refresh_journey() {
+        if(journeyList != null) {
+            journeyList.clear();
+        }
 
         String connectionQuery = "SELECT * from JOURNEY;";
         Connection connectDB = null;
@@ -761,7 +774,6 @@ public class databaseController {
                         Connection connectDB = null;
                         try {
                             connectDB = DatabaseConnection.connect();
-                            String connection_1 = "DELETE FROM AIRLINE WHERE AirlineID ";
                             String connectionQuery = "DELETE FROM FLIGHT WHERE FlightNumber=\"" + rowData.getFlightNumber() + "\";";
                             PreparedStatement pstmt = connectDB.prepareStatement(connectionQuery);
                             pstmt.executeUpdate(connectionQuery);
@@ -819,6 +831,7 @@ public class databaseController {
         flightTableView.getColumns().addAll(FlightNumber, Origin, Destination, Duration, Actions);
 
     }
+
     public void add_columns_airline() throws Exception {
         airlineTableView.setEditable(false);
 
@@ -1241,7 +1254,7 @@ public class databaseController {
                 controller.submitButton.setDisable(false);
                 controller.error_msg.setText("");
 
-                if(!newValue.matches("\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]) ([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d")) {
+                if(!newValue.matches("\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]) ([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d") && !newValue.isEmpty() && !newValue.equalsIgnoreCase("null")) {
                     controller.error_msg.setText("Invalid DateTime");
                     controller.submitButton.setDisable(true);
                 }
@@ -1273,7 +1286,7 @@ public class databaseController {
                 controller.error_msg.setText("");
 
                 if(!newValue.matches("[a-zA-Z ]+")) {
-                    controller.error_msg.setText("Invalid AirlineID");
+                    controller.error_msg.setText("Invalid Airline Name");
                     controller.submitButton.setDisable(true);
                 }
 
@@ -1318,7 +1331,7 @@ public class databaseController {
             }
         }
 
-        static boolean validate_data_plane(databaseController controller, Stage popupStage) {
+        public static boolean validate_data_plane(databaseController controller, Stage popupStage) {
             if(!controller.Plane_Passengers.getText().isEmpty() && !controller.Plane_PlaneLayout.getText().isEmpty()
                     && !controller.Plane_Model.getText().isEmpty() && !controller.Plane_Manufacturer.getText().isEmpty()) {
 
@@ -1353,7 +1366,7 @@ public class databaseController {
             }
         }
 
-        static boolean validate_data_journey(databaseController controller, Stage popupStage) {
+        public static boolean validate_data_journey(databaseController controller, Stage popupStage) {
             if(!controller.Journey_DepartureDateTime.getText().isEmpty() && !controller.Journey_PlaneID.getText().isEmpty()
                     && !controller.Journey_DepartureGate.getText().isEmpty()) {
 
@@ -1369,9 +1382,28 @@ public class databaseController {
                     show_error_stage(popupStage, "Incorrect DateTime Format");
                     return false;
                 }
-                if(!(delayed_time.isEmpty() || delayed_time.toLowerCase().equals("null")) && !delayed_time.matches("\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]) ([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d")) {
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime dateTime = LocalDateTime.parse(time, formatter);
+                LocalDateTime now = LocalDateTime.now(Clock.system(ZoneId.of("Asia/Singapore")));
+
+                if(now.isAfter(dateTime)) {
+                    show_error_stage(popupStage, "Can only set Future Flights");
+                    return false;
+                }
+
+                if(!(delayed_time.isEmpty() && !delayed_time.equalsIgnoreCase("null")) && !delayed_time.matches("\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]) ([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d")) {
                     show_error_stage(popupStage, "Incorrect DateTime Format");
                     return false;
+                }
+                else if(delayed_time.matches("\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]) ([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d")) {
+                    LocalDateTime delayedTime = LocalDateTime.parse(delayed_time, formatter);
+
+                    if(!delayedTime.isAfter(dateTime)) {
+                        show_error_stage(popupStage, "Delayed Time must be after original time");
+                        return false;
+                    }
+
                 }
 
                 String verification = "SELECT * FROM PLANE WHERE PlaneID = " + controller.Journey_PlaneID.getText() + ";";
@@ -1420,7 +1452,7 @@ public class databaseController {
             }
         }
 
-        static boolean validate_data_flight(databaseController controller, Stage popupStage, boolean insert) {
+        public static boolean validate_data_flight(databaseController controller, Stage popupStage, boolean insert) {
             if(!controller.Flight_FlightNumber.getText().isEmpty() && !controller.Flight_Origin.getText().isEmpty() &&
                     !controller.Flight_AirlineID.getText().isEmpty() && !controller.Flight_Duration.getText().isEmpty() &&
                     !controller.Flight_Destination.getText().isEmpty() ) {

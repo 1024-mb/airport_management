@@ -25,6 +25,8 @@ public class databases_entry_controllerTest extends ApplicationTest {
 
     databases_entry_controller controller = null;
 
+
+    // all other methods call the methods on this file so can be checked easily
     @Override
     public void start(Stage stage) {
         controller = new databases_entry_controller();
@@ -37,12 +39,17 @@ public class databases_entry_controllerTest extends ApplicationTest {
         controller.maxPassengers = new Label();
         controller.minPassengers = new Label();
         controller.avgPassengers = new Label();
+        controller.home_button = new Button();
+
 
         controller.topAirlines = new PieChart();
         controller.topDestinations = new PieChart();
         controller.topTickets = new PieChart();
 
         controller.report = new Button();
+        controller.flight = new Button();
+        controller.airline = new Button();
+        controller.plane = new Button();
 
         controller.x = new CategoryAxis();
         controller.y = new NumberAxis();
@@ -78,7 +85,7 @@ public class databases_entry_controllerTest extends ApplicationTest {
     }
 
     @Test
-    void test_sales_summary_does_not_crash() {
+    void test_report() {
         Assertions.assertDoesNotThrow(() -> interact(() -> {
             try {
                 controller.report.fire();
@@ -88,4 +95,46 @@ public class databases_entry_controllerTest extends ApplicationTest {
         }));
     }
 
+    @Test
+    void test_flight_database() {
+        Assertions.assertDoesNotThrow(() -> interact(() -> {
+            try {
+                controller.flight.fire();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }));
+    }
+
+    @Test
+    void test_plane_database() {
+        Assertions.assertDoesNotThrow(() -> interact(() -> {
+            try {
+                controller.plane.fire();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }));
+    }
+
+    @Test
+    void test_airline_database() {
+        Assertions.assertDoesNotThrow(() -> interact(() -> {
+            try {
+                controller.airline.fire();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }));
+    }
+    @Test
+    void test_home() {
+        Assertions.assertDoesNotThrow(() -> interact(() -> {
+            try {
+                controller.home_button.fire();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }));
+    }
 }

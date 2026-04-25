@@ -6,6 +6,7 @@ import com.example.airport_management.main;
 import com.example.airport_management.utilities.airlineLogo;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -28,6 +29,7 @@ public class flightDetailController {
     @FXML public Label model;
     @FXML public Label passengers;
     @FXML public Label flight_attendants;
+    @FXML public Button back;
 
 
     public void add_details(Integer JourneyID) throws Exception {

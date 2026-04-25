@@ -4,6 +4,7 @@ import com.example.airport_management.controller.starterController;
 import javafx.application.Application;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,8 @@ public class starterControllerTest extends ApplicationTest {
 
         controller.login_button = new Button();
         controller.database_button = new Button();
+        controller.shopping_button = new Button();
+        controller.flight_button = new Button();
     }
 
     @Test
@@ -47,21 +50,31 @@ public class starterControllerTest extends ApplicationTest {
     @Test
     void test_alternate_text_sets_text() {
         String[] messages = {"A", "B"};
-
         controller.alternate_text(messages, controller.welcomeLabel);
 
-        // Can't reliably assert animation timing,
-        // but label should not stay null
         assertNotNull(controller.welcomeLabel.getText());
     }
+
     @Test
     void test_database_button_hidden_for_non_admin() {
         controller.initialize();
 
-        // Most users won't be admin (ID != 3)
         assertTrue(controller.database_button.isDisabled() ||
                 !controller.database_button.isVisible());
     }
 
+    @Test
+    void test_shopping() {
+        assertDoesNotThrow(() -> controller.shopping_button.fire());
+    }
 
+    @Test
+    void test_flight() {
+        assertDoesNotThrow(() -> controller.flight_button.fire());
+    }
+
+    @Test
+    void test_login() {
+        assertDoesNotThrow(() -> controller.login_button.fire());
+    }
 }

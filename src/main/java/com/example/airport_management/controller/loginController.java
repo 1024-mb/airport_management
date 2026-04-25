@@ -12,10 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -30,6 +27,7 @@ public class loginController {
     @FXML public TextField email_field;
     @FXML public Button signup_button;
     @FXML public Label error_label;
+    @FXML public Hyperlink signup_hyperlink;
 
     @FXML
     public void initialize() {
@@ -53,7 +51,7 @@ public class loginController {
     }
 
     public boolean validate_password(String password) {
-        if(password.isEmpty() || password.length() < 10 || password.matches("[a-zA-Z ]*") || !password.matches("[0-9]") || password.matches("[a-zA-Z0-9 ]*")) {
+        if(password.length() < 10 || password.matches("[a-zA-Z ]*") || password.matches("[a-zA-Z0-9 ]*")) {
             return false;
         }
         return true;
@@ -105,7 +103,7 @@ public class loginController {
                 controller.error_label.setText("Error - Please Enter a Username");
 
             }
-            if(newValue.matches("^[A-Za-z0-9._]+$")) {
+            if(!newValue.matches("^[A-Za-z0-9_]+$")) {
                 controller.signup_button.setDisable(true);
                 controller.error_label.setText("Error - Invalid Username");
 
@@ -269,6 +267,7 @@ public class loginController {
             throw new RuntimeException(ex2);
         }
     }
+
 
 
 }

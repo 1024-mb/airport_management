@@ -30,7 +30,7 @@
          <children>
             <AnchorPane prefHeight="198.0" prefWidth="282.0">
                <children>
-                  <Button layoutX="62.0" mnemonicParsing="false" onAction="#plane_database" prefHeight="202.0" prefWidth="231.0" styleClass="button_global" text="PLANE">
+                  <Button fx:id="plane" layoutX="62.0" mnemonicParsing="false" onAction="#plane_database" prefHeight="202.0" prefWidth="231.0" styleClass="button_global" text="PLANE">
                      <font>
                         <Font size="23.0" />
                      </font>
@@ -43,7 +43,7 @@
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                <children>
-                  <Button layoutX="32.0" mnemonicParsing="false" onAction="#flight_database" prefHeight="202.0" prefWidth="231.0" styleClass="button_global" text="FLIGHT">
+                  <Button fx:id="flight" layoutX="32.0" mnemonicParsing="false" onAction="#flight_database" prefHeight="202.0" prefWidth="231.0" styleClass="button_global" text="FLIGHT">
                      <font>
                         <Font size="23.0" />
                      </font>
@@ -56,7 +56,7 @@
             </AnchorPane>
             <AnchorPane prefHeight="210.0" prefWidth="340.0" GridPane.rowIndex="1">
                <children>
-                  <Button layoutX="62.0" layoutY="2.0" mnemonicParsing="false" onAction="#airline_database" prefHeight="202.0" prefWidth="231.0" styleClass="button_global" text="AIRLINE">
+                  <Button fx:id="airline" layoutX="62.0" layoutY="2.0" mnemonicParsing="false" onAction="#airline_database" prefHeight="202.0" prefWidth="231.0" styleClass="button_global" text="AIRLINE">
                      <font>
                         <Font size="23.0" />
                      </font>

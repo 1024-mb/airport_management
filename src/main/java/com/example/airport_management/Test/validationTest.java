@@ -2,6 +2,7 @@ package com.example.airport_management.Test;
 
 import com.example.airport_management.controller.databaseController;
 import com.example.airport_management.models.database;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,6 +12,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -186,16 +189,143 @@ public class validationTest extends ApplicationTest {
 
         assertEquals("Invalid Number of Flight Attendants.", controller.error_msg.getText());
     }
+    @Test
+    void testValidatePlane_Valid() {
+        controller.Plane_Passengers.setText("200");
+        controller.Plane_FlightAttendants.setText("2");
+        controller.Plane_PlaneLayout.setText("https://www.example.com/layout.png");
+        controller.Plane_Model.setText("A320");
+        controller.Plane_Manufacturer.setText("Airbus");
+
+        AtomicBoolean result = new AtomicBoolean(true);
+        Platform.runLater(() -> {
+            result.set(databaseController.validation.validate_data_plane(controller, new Stage()));
+            assertTrue(result.get());
+        });
+    }
+
+    @Test
+    void testValidatePlane_InvalidURL() {
+        controller.Plane_Passengers.setText("200");
+        controller.Plane_FlightAttendants.setText("10");
+        controller.Plane_PlaneLayout.setText("invalid-url");
+        controller.Plane_Model.setText("A320");
+        controller.Plane_Manufacturer.setText("Airbus");
+
+        AtomicBoolean result = new AtomicBoolean(false);
+        Platform.runLater(() -> {
+            result.set(databaseController.validation.validate_data_plane(controller, new Stage()));
+            assertFalse(result.get());
+
+        });
+    }
+
+    @Test
+    void testValidatePlane_InvalidPassengers() {
+        controller.Plane_Passengers.setText("-5");
+        controller.Plane_FlightAttendants.setText("10");
+        controller.Plane_PlaneLayout.setText("http://example.com/layout.png");
+        controller.Plane_Model.setText("A320");
+        controller.Plane_Manufacturer.setText("Airbus");
+
+        AtomicBoolean result = new AtomicBoolean(false);
+        Platform.runLater(() -> {
+            result.set(databaseController.validation.validate_data_plane(controller, new Stage()));
+            assertFalse(result.get());
+
+        });
+    }
 
 
     @Test
-    void test_validate_data_airline_valid() {
-        controller.Airline_AirlineName.setText("Valid Name");
+    void testValidateJourney_InvalidGate() {
+        controller.Journey_DepartureGate.setText("123");
+        controller.Journey_DepartureDateTime.setText("2026-04-10 10:00:00");
+        controller.Journey_PlaneID.setText("1");
 
-        boolean result = databaseController.validation.validate_data_airline(controller, null);
+        AtomicBoolean result = new AtomicBoolean(false);
+        Platform.runLater(() -> {
+            result.set(databaseController.validation.validate_data_journey(controller, new Stage()));
+            assertFalse(result.get());
 
-        assertTrue(result);
+        });
     }
 
+    @Test
+    void testValidateJourney_InvalidDate() {
+        controller.Journey_DepartureGate.setText("A12");
+        controller.Journey_DepartureDateTime.setText("10-04-2026");
+        controller.Journey_PlaneID.setText("1");
+
+        AtomicBoolean result = new AtomicBoolean(false);
+        Platform.runLater(() -> {
+            result.set(databaseController.validation.validate_data_journey(controller, new Stage()));
+            assertFalse(result.get());
+
+        });
+    }
+
+    @Test
+    void testValidateJourney_EmptyFields() {
+        controller.Journey_DepartureGate.setText("");
+        controller.Journey_DepartureDateTime.setText("");
+        controller.Journey_PlaneID.setText("");
+
+        AtomicBoolean result = new AtomicBoolean(false);
+        Platform.runLater(() -> {
+            result.set(databaseController.validation.validate_data_journey(controller, new Stage()));
+            assertFalse(result.get());
+
+        });
+    }
+
+
+    @Test
+    void testValidateFlight_EmptyFields() {
+        controller.Flight_FlightNumber.setText("");
+        controller.Flight_Origin.setText("");
+        controller.Flight_AirlineID.setText("");
+        controller.Flight_Duration.setText("");
+        controller.Flight_Destination.setText("");
+
+        AtomicBoolean result = new AtomicBoolean(false);
+        Platform.runLater(() -> {
+            result.set(databaseController.validation.validate_data_flight(controller, new Stage(), true));
+            assertFalse(result.get());
+
+        });
+    }
+
+    @Test
+    void testValidateFlight_InvalidFlightNumber() {
+        controller.Flight_FlightNumber.setText("123ABC");
+        controller.Flight_Origin.setText("LON");
+        controller.Flight_AirlineID.setText("1");
+        controller.Flight_Duration.setText("5");
+        controller.Flight_Destination.setText("NYC");
+
+        AtomicBoolean result = new AtomicBoolean(false);
+        Platform.runLater(() -> {
+            result.set(databaseController.validation.validate_data_flight(controller, new Stage(), false));
+            assertFalse(result.get());
+
+        });
+    }
+
+    @Test
+    void testValidateFlight_InvalidDuration() {
+        controller.Flight_FlightNumber.setText("BA123");
+        controller.Flight_Origin.setText("LON");
+        controller.Flight_AirlineID.setText("1");
+        controller.Flight_Duration.setText("25");
+        controller.Flight_Destination.setText("NYC");
+
+        AtomicBoolean result = new AtomicBoolean(false);
+        Platform.runLater(() -> {
+            result.set(databaseController.validation.validate_data_flight(controller, new Stage(), false));
+            assertFalse(result.get());
+
+        });
+    }
 
 }

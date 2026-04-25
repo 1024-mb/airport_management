@@ -34,8 +34,6 @@ public class databases_entry_controller {
     @FXML public VBox tickets;
     @FXML public VBox destinations;
 
-    @FXML public Button report;
-
     @FXML public LineChart sales_graph;
     @FXML public CategoryAxis x;
     @FXML public NumberAxis y;
@@ -47,15 +45,16 @@ public class databases_entry_controller {
     @FXML public Label maxPassengers;
     @FXML public Label avgPassengers;
     @FXML public Label minPassengers;
+    @FXML public Button home_button;
 
     @FXML public PieChart topDestinations;
     @FXML public PieChart topAirlines;
     @FXML public PieChart topTickets;
 
-
-    //@FXML private Label getAvgFlightTime;
-    //@FXML private Label avgFlightTime;
-
+    @FXML public Button airline;
+    @FXML public Button report;
+    @FXML public Button flight;
+    @FXML public Button plane;
 
     public void initialize() {
         Set<Node> nodes = root.lookupAll(".arrow_in");
